@@ -41,6 +41,7 @@ public class XMLReader {
 		for (int i = 0; i < fileNames.length; i++) {
 			try {
 				doc = getDocument(folderName + "\\" + fileNames[i]);
+				//System.out.println(fileNames[i]);
 				players[i] = readSinglePlayer(doc.getRootElement());
 			} catch (DocumentException e) {
 				// TODO Auto-generated catch block
@@ -57,9 +58,9 @@ public class XMLReader {
 	private Player readSinglePlayer (Element playerElement) {
 		Player player = new Player();
 		
-		player.birthday = playerElement.attributeValue("birthday");
-		player.experience = Integer.parseInt(playerElement.attributeValue("experience"));
-		player.jersey_number = Integer.parseInt(playerElement.attributeValue("jersey_number"));
+		player.birthday = playerElement.attributeValue("birthdate") == null ? null : playerElement.attributeValue("birthdate");
+		player.experience = Integer.parseInt(playerElement.attributeValue("experience") == null ? "-1" : playerElement.attributeValue("experience")) ;
+		player.jersey_number = Integer.parseInt(playerElement.attributeValue("jersey_number") == null ? "-1" : playerElement.attributeValue("jersey_number"));
 		player.weight = Integer.parseInt(playerElement.attributeValue("weight"));
 		player.height = Integer.parseInt(playerElement.attributeValue("height"));
 		player.abbr_name = playerElement.attributeValue("abbr_name");
@@ -71,29 +72,33 @@ public class XMLReader {
 		player.primary_position = getPositionType(playerElement.attributeValue("primary_position"));
 	
 		// read statistics data
-		Element statistics = (Element) playerElement.selectSingleNode("player/seasons/season/team/statistics/total");
-		player.games_played = Integer.parseInt(statistics.attributeValue("games_played"));
-		statistics = playerElement.element("average");
-		player.two_points_att = Float.parseFloat(statistics.attributeValue("two_points_att"));
-		player.two_points_made = Float.parseFloat(statistics.attributeValue("two_points_made"));
-		player.three_points_att = Float.parseFloat(statistics.attributeValue("three_points_att"));
-		player.three_points_made = Float.parseFloat(statistics.attributeValue("three_points_made"));
-		player.rebounds = Float.parseFloat(statistics.attributeValue("rebounds"));
-		player.flagrant_fouls = Float.parseFloat(statistics.attributeValue("flagrant_fouls"));
-		player.points = Float.parseFloat(statistics.attributeValue("points"));
-		player.personal_fouls = Float.parseFloat(statistics.attributeValue("personal_fouls"));
-		player.blocks = Float.parseFloat(statistics.attributeValue("blocks"));
-		player.steals = Float.parseFloat(statistics.attributeValue("steals"));
-		player.turnovers = Float.parseFloat(statistics.attributeValue("turnovers"));
-		player.free_throws_att = Float.parseFloat(statistics.attributeValue("free_throws_att"));
-		player.free_throws_made = Float.parseFloat(statistics.attributeValue("free_throws_made"));
-		player.blocked_att = Float.parseFloat(statistics.attributeValue("blocked_att"));
-		player.field_goals_att = Float.parseFloat(statistics.attributeValue("field_goals_att"));
-		player.field_goals_made = Float.parseFloat(statistics.attributeValue("field_goals_made"));
-		player.minutes = Float.parseFloat(statistics.attributeValue("minutes"));
-		player.def_rebounds = Float.parseFloat(statistics.attributeValue("def_rebounds"));
-		player.off_rebounds = Float.parseFloat(statistics.attributeValue("off_rebounds"));
-		
+		if (playerElement.element("seasons") != null) {
+			Element statistics = playerElement.element("seasons").element("season").element("team").element("statistics").element("total");
+			player.games_played = Integer.parseInt(statistics.attributeValue("games_played"));
+			
+			statistics = playerElement.element("seasons").element("season").element("team").element("statistics").element("average");
+			player.two_points_att = Float.parseFloat(statistics.attributeValue("two_points_att"));
+			player.two_points_made = Float.parseFloat(statistics.attributeValue("two_points_made"));
+			player.three_points_att = Float.parseFloat(statistics.attributeValue("three_points_att"));
+			player.three_points_made = Float.parseFloat(statistics.attributeValue("three_points_made"));
+			player.rebounds = Float.parseFloat(statistics.attributeValue("rebounds"));
+			player.flagrant_fouls = Float.parseFloat(statistics.attributeValue("flagrant_fouls"));
+			player.points = Float.parseFloat(statistics.attributeValue("points"));
+			player.personal_fouls = Float.parseFloat(statistics.attributeValue("personal_fouls"));
+			player.blocks = Float.parseFloat(statistics.attributeValue("blocks"));
+			player.steals = Float.parseFloat(statistics.attributeValue("steals"));
+			player.turnovers = Float.parseFloat(statistics.attributeValue("turnovers"));
+			player.free_throws_att = Float.parseFloat(statistics.attributeValue("free_throws_att"));
+			player.free_throws_made = Float.parseFloat(statistics.attributeValue("free_throws_made"));
+			player.blocked_att = Float.parseFloat(statistics.attributeValue("blocked_att"));
+			player.field_goals_att = Float.parseFloat(statistics.attributeValue("field_goals_att"));
+			player.field_goals_made = Float.parseFloat(statistics.attributeValue("field_goals_made"));
+			player.minutes = Float.parseFloat(statistics.attributeValue("minutes"));
+			player.def_rebounds = Float.parseFloat(statistics.attributeValue("def_rebounds"));
+			player.off_rebounds = Float.parseFloat(statistics.attributeValue("off_rebounds"));
+			
+		}
+
 		return player;
 	}
 	/**
@@ -116,8 +121,10 @@ public class XMLReader {
 			return PositionType.PF;
 		} else if (position.equals("C")) {
 			return PositionType.C;
+		} else if (position.equals("G-F")) {
+			return PositionType.G_F;
 		} else {
-			System.out.println("Wrong Position Input!");
+			System.out.println("Wrong Position Input :" + position);
 			return null;
 		}
 	}
