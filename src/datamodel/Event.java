@@ -8,4 +8,6 @@ public class Event {
 	String discription;
 	Team actionTeam;
 	Team pocessionTeam;
+	
+	int timeSinceLastEvent;
 }

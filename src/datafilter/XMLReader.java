@@ -1,5 +1,6 @@
 package datafilter;
 
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,12 +8,14 @@ import java.util.Iterator;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+import datamodel.Game;
 import datamodel.Player;
 import datamodel.PositionType;
+import datamodel.Quarter;
 import datamodel.Team;
+import datamodel.Event;
 
 public class XMLReader {
 	
@@ -199,6 +202,59 @@ public class XMLReader {
 			team.players[num++] = iter.next().attributeValue("full_name");
 		}
 		return team;
+	}
+	
+	
+	public Game readSingleGameData (String fileName) {
+		Game game = new Game();
+		Document doc;
+		try {
+			doc = getDocument(fileName);
+			Element gameRoot = doc.getRootElement();
+			game.leadChange = Integer.parseInt(gameRoot.attributeValue("lead_changes"));
+			game.numOfQuarters = Integer.parseInt(gameRoot.attributeValue("quarter"));
+			game.quarters = new Quarter[game.numOfQuarters];
+			
+			Element temp = gameRoot.element("scoring").element("home");
+			game.homeTeam = temp.attributeValue("name");
+			game.homeScore = Integer.parseInt(temp.attributeValue("points"));
+			temp = gameRoot.element("scoring").element("away");
+			game.awayTeam = temp.attributeValue("name");
+			game.awayScore = Integer.parseInt(temp.attributeValue("points"));
+			
+			Iterator<Element> quarterIter = gameRoot.elementIterator("quarter");
+			Element tempQuarter;
+			int index;
+			while (quarterIter.hasNext()) {
+				tempQuarter = (Element)quarterIter.next();
+				index = Integer.parseInt(tempQuarter.attributeValue("number")) - 1;
+				readGameEvent(tempQuarter, game.quarters[index]);
+			}
+			
+			return game;
+			
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void readGameEvent (Element quarterElement, Quarter quarter) {
+		Element temp = quarterElement.element("scoring");
+		quarter.homeScore = Integer.parseInt(temp.element("home").attributeValue("points"));
+		quarter.awayScore = Integer.parseInt(temp.element("away").attributeValue("points"));
+		int numOfEvent = quarterElement.elements().size();
+		quarter.events = new Event[numOfEvent];
+		int index = 0;
+		Iterator<Element> eventIter = quarterElement.element("quarter").element("events").elementIterator();
+		while (eventIter.hasNext()) {
+			quarter.events[index++] = readSingleEvent((Element)eventIter.next());
+		}
+		
+	}
+	private Event readSingleEvent (Element eventElement) {
+		
 	}
 	
 }

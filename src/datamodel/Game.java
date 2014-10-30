@@ -1,19 +1,15 @@
 package datamodel;
 
 public class Game {
-	int leadChange;
-	int numOfQuarters;
-	Quarter[] quarters;
+	public int leadChange;
+	public int numOfQuarters;
+	public Quarter[] quarters;
 	
+	public String homeTeam;
+	public int homeScore;
+	public TeamGameSummary homeSummary;
 	
-	Team homeTeam;
-	int homeScore;
-	TeamGameSummary homeSummary;
-	
-	
-	Team awayTeam;
-	int awayScore;
-	TeamGameSummary awaySummary;
-	
-	
+	public String awayTeam;
+	public int awayScore;
+	public TeamGameSummary awaySummary;
 }

@@ -1,6 +1,7 @@
 package datamodel;
 
 public class Quarter {
-	int score;
-	Event[] events;
+	public int homeScore;
+	public int awayScore;
+	public Event[] events;
 }
