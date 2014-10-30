@@ -8,5 +8,8 @@ public enum PositionType {
 	PF,
 	SF,
 	G_F,
-	C;
+	C,
+	F_C,
+	C_F,
+	F_G;
 }

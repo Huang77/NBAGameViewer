@@ -1,6 +1,8 @@
 package datafilter;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -10,19 +12,31 @@ import org.dom4j.io.SAXReader;
 
 import datamodel.Player;
 import datamodel.PositionType;
+import datamodel.Team;
 
 public class XMLReader {
 	
 	public static void main (String[] args) {
 		XMLReader reader = new XMLReader();
-		Player[] players = reader.readPlayerData("C:\\Users\\HXX\\Desktop\\sportdataanalysis\\NBA_Data\\Regular\\Player_Profile");
+		HashMap<String, Team> teams = reader.readTeamData("C:\\Users\\HXX\\Desktop\\sportdataanalysis\\NBA_Data\\Regular\\Team_Profile");
 		
-		for (int i = 0; i < players.length; i++) {
-			System.out.println(players[i].full_name);
+		Iterator iter = teams.values().iterator();
+		while (iter.hasNext()) {
+			System.out.println(((Team)iter.next()).name);
 		}
+		
+	}
+	
+	public void getPlayerData (HashMap<String, Player> players, String folderName) {
+		players = readPlayerData(folderName);
+	}
+	public void getTeamData (HashMap<String, Team> teams, String folderName) {
+		teams = readTeamData(folderName);
 	}
 
-	public Document getDocument (String fileName) throws DocumentException {
+	
+
+	private Document getDocument (String fileName) throws DocumentException {
 		SAXReader reader = new SAXReader();
 		return reader.read(new File(fileName));
 	}
@@ -31,23 +45,26 @@ public class XMLReader {
 	 * @param folderName
 	 * @return
 	 */
-	public Player[] readPlayerData (String folderName) {
+	private HashMap<String, Player> readPlayerData (String folderName) {
 		File folder = new File(folderName);
 		String[] fileNames = folder.list();
 		int numOfPlayer = fileNames.length;
-		Player[] players = new Player[numOfPlayer];
+		HashMap<String, Player> players = new HashMap<String, Player>();
 		
 		Document doc;
 		for (int i = 0; i < fileNames.length; i++) {
 			try {
 				doc = getDocument(folderName + "\\" + fileNames[i]);
 				//System.out.println(fileNames[i]);
-				players[i] = readSinglePlayer(doc.getRootElement());
+				Player player = readSinglePlayer(doc.getRootElement());
+				players.put(player.full_name, player);
 			} catch (DocumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}	
+		//System.out.println(fileNames.length);
+		//System.out.println(players.size());
 		return players;
 	}
 	/** 
@@ -73,6 +90,7 @@ public class XMLReader {
 	
 		// read statistics data
 		if (playerElement.element("seasons") != null) {
+			player.team = playerElement.element("seasons").element("season").element("team").attributeValue("name");
 			Element statistics = playerElement.element("seasons").element("season").element("team").element("statistics").element("total");
 			player.games_played = Integer.parseInt(statistics.attributeValue("games_played"));
 			
@@ -123,10 +141,64 @@ public class XMLReader {
 			return PositionType.C;
 		} else if (position.equals("G-F")) {
 			return PositionType.G_F;
+		} else if (position.equals("C-F")) {
+			return PositionType.C_F;
+		} else if (position.equals("F-C")) {
+			return PositionType.F_C;
+		} else if (position.equals("F-G")) {
+			return PositionType.F_G;
 		} else {
 			System.out.println("Wrong Position Input :" + position);
 			return null;
 		}
+	}
+	
+	/**
+	 * read all team data
+	 * @param folderName
+	 * @return
+	 */
+	private HashMap<String, Team> readTeamData (String folderName) {
+		File folder =  new File(folderName);
+		String[] fileNames = folder.list();
+		HashMap<String, Team> teams= new HashMap<String, Team>();
+		
+		Document doc;
+		for (int i = 0; i < fileNames.length; i++) {
+			try {
+				doc = getDocument(folderName + "\\" + fileNames[i]);
+				Team team = readSingleTeam(doc.getRootElement());
+				teams.put(team.name, team);
+			} catch (DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		return teams;
+	}
+	
+	private Team readSingleTeam (Element root) {
+		Team team = new Team();
+		team.alias = root.attributeValue("alias");
+		team.name = root.attributeValue("name");
+		if (root.element("coaches") != null) {
+			team.coach = root.element("coaches").element("coach").attributeValue("full_name");
+		} else {
+			team.coach = "null";
+		}
+		
+		team.conference = root.element("hierarchy").element("conference").attributeValue("alias");
+		team.division = root.element("hierarchy").element("division").attributeValue("alias");
+		
+		int num = root.element("players").elements().size();
+		team.players = new String[num];
+		Iterator<Element> iter = root.elementIterator("players");
+		num = 0;
+		while (iter.hasNext()) {
+			team.players[num++] = iter.next().attributeValue("full_name");
+		}
+		return team;
 	}
 	
 }

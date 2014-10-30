@@ -19,7 +19,7 @@ public class Player {
 	public int jersey_number;
 	public int experience;
 	
-	public Team team;
+	public String team;
 	
 	public int games_played;
 	// statistics

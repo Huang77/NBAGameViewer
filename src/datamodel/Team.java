@@ -1,13 +1,13 @@
 package datamodel;
 
 public class Team {
-	String name;
-	String alias;
+	public String name;
+	public String alias;
 	
-	ConferenceType conference;
-	DivisionType division;
+	public String conference;
+	public String division;
 	
-	String coach;
+	public String coach;
 	
-	Player[] players;
+	public String[] players;
 }
