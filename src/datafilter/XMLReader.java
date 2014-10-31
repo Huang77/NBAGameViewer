@@ -254,8 +254,17 @@ public class XMLReader {
 		
 	}
 	private Event readSingleEvent (Element eventElement) {
+		String event_type = eventElement.attributeValue("event_type");
 		
 	}
+	private Event createEventByType (String event_type) {
+		if (event_type.equals("rebound")) {
+			
+		} else if (event_type.equals("twopointmiss")) {
+			
+		} else if (event)
+	}
+	
 	
 }
 
