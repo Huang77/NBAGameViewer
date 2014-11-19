@@ -231,12 +231,14 @@ public class XMLReader {
 				readGameEvent(tempQuarter, game.quarters[index]);
 			}
 			
-			return game;
+			
 			
 		} catch (DocumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
+		
+		return game;
 		
 	}
 	
@@ -253,18 +255,37 @@ public class XMLReader {
 		}
 		
 	}
+	
 	private Event readSingleEvent (Element eventElement) {
 		String event_type = eventElement.attributeValue("event_type");
-		
-	}
-	private Event createEventByType (String event_type) {
+		Event event;
 		if (event_type.equals("rebound")) {
 			
 		} else if (event_type.equals("twopointmiss")) {
 			
-		} else if (event)
+		} else if (event_type.equals("threepointmiss")) {
+			
+		} else if (event_type.equals("freethrowmiss")) {
+			
+		} else if (event_type.equals("twopointmade")) {
+		
+		} else if (event_type.equals("threepointmade")) {
+			
+		} else if (event_type.equals("freethrowmade")) {
+			
+		} else if (event_type.equals("shootingfoul")) {
+			
+		} else if (event_type.equals("personalfoul")) {
+			
+		} else if (event_type.equals("turnover")) {
+			
+		} else if (event_type.equals("teamtimeout")) {
+			
+		} else if (event_type.equals("endperiod")) {
+			
+		}
+		
 	}
-	
 	
 }
 
