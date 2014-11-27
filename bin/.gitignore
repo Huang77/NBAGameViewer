@@ -1,5 +1,4 @@
-/META-INF/
-/datafilter/
-/datamodel/
-/singlegameview/
-/allgameview/
+/viewmodel/
+/datamodel_1/
+/datamodel_new/
+/gui/
