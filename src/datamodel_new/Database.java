@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Database {
-	final int teamNum = 30;
-	String[] teamNames;
-	HashMap<String, Integer> teamIndex;
-	ArrayList<GameStatData> gameStatDataList;
-	ArrayList<WinLostCellData> winLostCellList;
+	public final int teamNum = 30;
+	public String[] teamNames;
+	public HashMap<String, Integer> teamIndex;
+	public ArrayList<GameStatData> gameStatDataList;
+	public ArrayList<WinLostCellData> winLostCellList;
 	
 	public Database () {
 		teamNames = new String[teamNum];
@@ -20,6 +20,14 @@ public class Database {
 		gameStatDataList = new ArrayList<GameStatData>();
 		winLostCellList = new ArrayList<WinLostCellData>();
 	}
+	
+	public Database (String teamNameFile, String winLostFile, String gameStatFile) {
+		this();
+		readTeamNames(teamNameFile);
+		readWinLostCellData(winLostFile);
+		readAllGameStatData(gameStatFile);
+	}
+	
 	
 	public void readTeamNames (String fileName) {
 		File file = null;

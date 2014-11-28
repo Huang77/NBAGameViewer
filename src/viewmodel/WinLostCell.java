@@ -1,19 +1,34 @@
 package viewmodel;
 
-import datamodel_new.WinLostCellData;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+
+import processing.core.PApplet;
 
 public class WinLostCell {
-	WinLostCellData cellData;
-	SeasonCanvas canvas;
+	public Rectangle2D.Float rect = new Rectangle2D.Float();
+	ArrayList<LittleGameBar> gameBarList = new ArrayList<LittleGameBar>();
 	
-	
-	public WinLostCell (SeasonCanvas canvas) {
-		this.canvas = canvas;
+	public WinLostCell (int x, int y, int width, int height) {
+		rect.x = x;
+		rect.y = y;
+		rect.width = width;
+		rect.height = height;
 	}
 	
-	public WinLostCell (SeasonCanvas canvas, WinLostCellData cellData) {
-		this(canvas);
-		this.cellData = cellData;
+	public void setGameBar () {
+		
 	}
+	
+
+	
+	public void draw (PApplet canvas) {
+		canvas.pushMatrix();
+		
+		
+		canvas.popMatrix();
+	}
+	
+	
 	
 }
