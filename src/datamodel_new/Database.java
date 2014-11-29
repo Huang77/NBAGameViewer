@@ -13,6 +13,8 @@ public class Database {
 	public HashMap<String, Integer> teamIndex;
 	public ArrayList<GameStatData> gameStatDataList;
 	public ArrayList<WinLostCellData> winLostCellList;
+	public int maxScoreDiff = Integer.MIN_VALUE;
+	public int minScoreDiff = Integer.MAX_VALUE;
 	
 	public Database () {
 		teamNames = new String[teamNum];
@@ -26,6 +28,7 @@ public class Database {
 		readTeamNames(teamNameFile);
 		readWinLostCellData(winLostFile);
 		readAllGameStatData(gameStatFile);
+		setGameIndexofCellData();
 	}
 	
 	
@@ -102,9 +105,8 @@ public class Database {
 					WinLostCellData tempCellData = new WinLostCellData();
 					topTeamIndex = i - 2;
 					if (leftTeamIndex == topTeamIndex) {
-						tempCellData.leftTeam = -leftTeamIndex;
-						tempCellData.topTeam = -leftTeamIndex;
-						continue;
+						tempCellData.leftTeam = leftTeamIndex;
+						tempCellData.topTeam = leftTeamIndex;
 					} else {
 						tempCellData.leftTeam = leftTeamIndex;
 						tempCellData.topTeam = topTeamIndex;
@@ -113,8 +115,8 @@ public class Database {
 						tempCellData.topWin = win_lost[1];
 					}
 					winLostCellList.add(tempCellData);
-					leftTeamIndex++;
 				}
+				leftTeamIndex++;
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -165,6 +167,7 @@ public class Database {
 			String line = br.readLine();
 			String[] array;
 			int gameIndex = 0;
+			int scoreDiff;
 			while ((line = br.readLine()) != null) {
 				array = line.split(",");
 				GameStatData tempStatData = new GameStatData();
@@ -174,8 +177,16 @@ public class Database {
 				tempStatData.leftScore = Integer.parseInt(array[3]);
 				tempStatData.rightTeamIndex = teamIndex.get(array[4]);
 				tempStatData.rightScore = Integer.parseInt(array[5]);
-				if (array[6].equals("OT")) {
+				if (array.length >= 7 && array[6].equals("OT")) {
 					tempStatData.overtime = true;
+				}
+				gameStatDataList.add(tempStatData);
+				scoreDiff = Math.abs(tempStatData.leftScore - tempStatData.rightScore);
+				if (maxScoreDiff < scoreDiff) {
+					maxScoreDiff = scoreDiff;
+				}
+				if (minScoreDiff > scoreDiff) {
+					minScoreDiff = scoreDiff;
 				}
 			}
 			
