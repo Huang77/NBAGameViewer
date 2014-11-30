@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class Database {
 	public final int teamNum = 30;
 	public String[] teamNames;
+	public String[] teamShortNames;
 	public HashMap<String, Integer> teamIndex;
 	public ArrayList<GameStatData> gameStatDataList;
 	public ArrayList<WinLostCellData> winLostCellList;
@@ -18,6 +19,7 @@ public class Database {
 	
 	public Database () {
 		teamNames = new String[teamNum];
+		teamShortNames = new String[teamNum];
 		teamIndex = new HashMap<String, Integer>();
 		gameStatDataList = new ArrayList<GameStatData>();
 		winLostCellList = new ArrayList<WinLostCellData>();
@@ -54,6 +56,7 @@ public class Database {
 			while ((line = br.readLine()) != null) {
 				array = line.split(",");
 				teamNames[index] = array[1];
+				teamShortNames[index] = array[2];
 				teamIndex.put(array[1], index);
 				index++;
 			}

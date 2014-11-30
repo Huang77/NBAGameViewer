@@ -25,7 +25,9 @@ public class LittleGameBar {
 	
 	public void draw (PApplet canvas) {
 		canvas.pushStyle();
+		canvas.stroke(150, 150, 150);
 		canvas.strokeWeight(strokeW);
+		//canvas.noStroke();
 		canvas.fill(color[0], color[1], color[2]);
 		canvas.rect(leftTopX, leftTopY, width, height);
 		canvas.popStyle();

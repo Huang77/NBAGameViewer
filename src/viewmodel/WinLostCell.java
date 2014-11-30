@@ -31,6 +31,7 @@ public class WinLostCell {
 	
 	public void draw (PApplet canvas) {
 		canvas.pushMatrix();
+		canvas.stroke(180, 180, 180);
 		canvas.strokeWeight(strokeW);
 		canvas.fill(color[0], color[1], color[2]);
 		canvas.rect(rect.x, rect.y, rect.width, rect.height);

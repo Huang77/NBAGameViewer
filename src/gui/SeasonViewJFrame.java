@@ -19,7 +19,7 @@ public class SeasonViewJFrame extends JFrame {
 	JPanel leftToolBar;
 	JPanel mainPanel;
 	
-	int winWidth = 1400, winHeight = 840;
+	int winWidth = 1440, winHeight = 880;
 	int seasonCanvasWidth = winWidth, seasonCanvasHeight = winHeight;
 	
 	public SeasonViewJFrame () {

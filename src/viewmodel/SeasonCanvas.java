@@ -27,7 +27,7 @@ public class SeasonCanvas extends PApplet {
 	PFont font = createFont("Sans Serif", textSize);
 	
 	// size of the winLostCell
-	int leftTopX = 20, leftTopY = 20;
+	int leftTopX = 150, leftTopY = 50;
 	int cellSize;
 	int cellGap = 2;
 	
@@ -45,9 +45,9 @@ public class SeasonCanvas extends PApplet {
 	}
 	
 	public void setupWinLostCell () {
-		cellSize = (int) (width * 0.8 / database.teamNum - cellGap);
+		cellSize = (int) (height * 0.8 / database.teamNum - cellGap);
 		this.winLostCellList = new WinLostCell[database.teamNum * database.teamNum];
-		int tempX = leftTopX, tempY = leftTopY;
+		int tempX = leftTopX, tempY = leftTopY - cellSize - cellGap;
 		
 		WinLostCellData tempCellData;
 		for (int i = 0; i < database.winLostCellList.size(); i++) {
@@ -74,11 +74,11 @@ public class SeasonCanvas extends PApplet {
 				ArrayList<Integer> gameIndex = tempCellData.getGameIndexes();
 				int gameCount = gameIndex.size();
 				int scoreDiff;
-				int x = tempX + 5, y = tempY + 5;
+				int x = tempX + 2, y = tempY + 2;
 				int barGap = 2;
-				int barHeight = (cellSize - 5 - 3 - 3 * barGap) / 4;
-				int minWidth = 5;
-				int maxWidth = cellSize - 10;
+				int barHeight = (cellSize - 2 - 3 * barGap) / 4;
+				int minWidth = 1;
+				int maxWidth = cellSize - 4;
 				int barWidth;
 				int[] barColor;
 				GameStatData tempData;
@@ -114,13 +114,43 @@ public class SeasonCanvas extends PApplet {
     		winLostCellList[4].draw(this);
     		winLostCellList[5].draw(this);*/
     	drawAllWinLostCells();
+    	drawLeftTeamNames();
+    	drawTopTeamNames();
 
     }
     
     public void drawAllWinLostCells () {
-    	for (int i = 0; i < winLostCellList.length; i++) {
-    		System.out.println(i);
+    	for (int i = 0; i < 900; i++) {
     		winLostCellList[i].draw(this);
     	}
+    }
+    
+    public void drawLeftTeamNames () {
+    	int x = leftTopX - 5;
+    	int y = leftTopY;
+    	this.pushStyle();
+    	this.fill(0);
+    	this.textAlign(PApplet.RIGHT, PApplet.TOP);
+    	for (int i = 0; i < database.teamNum; i++) {
+    		this.text(database.teamNames[i], x, y + i * (cellSize + cellGap));
+    	}
+    	this.popStyle();
+    }
+    
+    public void drawTopTeamNames () {
+    	int x = leftTopX + cellSize / 2;
+    	int y = leftTopY - 2;
+    	//this.rotate(-PApplet.QUARTER_PI);
+    	this.pushStyle();
+    	this.fill(0);
+    	this.textAlign(PApplet.LEFT);
+    	for (int i = 0; i < database.teamNum; i++) {
+    		this.pushMatrix();
+    		this.translate(x + i * (cellSize + cellGap), y);
+    		this.rotate(-PApplet.QUARTER_PI);
+    		this.text(database.teamShortNames[i], 0, 0);
+    		this.popMatrix();
+    	}
+    	this.popStyle();
     }
 }
