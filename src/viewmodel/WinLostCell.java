@@ -33,6 +33,12 @@ public class WinLostCell {
 		canvas.pushMatrix();
 		canvas.stroke(180, 180, 180);
 		canvas.strokeWeight(strokeW);
+		if (canvas.mouseX < rect.x + rect.width && canvas.mouseX > rect.x &&
+				canvas.mouseY > rect.y && canvas.mouseY < rect.y + rect.height) {
+			canvas.stroke(50);
+			canvas.strokeWeight(2);
+		}
+		
 		canvas.fill(color[0], color[1], color[2]);
 		canvas.rect(rect.x, rect.y, rect.width, rect.height);
 		for (int i = 0; i < gameBarList.size(); i++) {

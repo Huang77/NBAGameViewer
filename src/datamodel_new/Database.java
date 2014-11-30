@@ -9,8 +9,7 @@ import java.util.HashMap;
 
 public class Database {
 	public final int teamNum = 30;
-	public String[] teamNames;
-	public String[] teamShortNames;
+	public Team[] teams;
 	public HashMap<String, Integer> teamIndex;
 	public ArrayList<GameStatData> gameStatDataList;
 	public ArrayList<WinLostCellData> winLostCellList;
@@ -18,8 +17,7 @@ public class Database {
 	public int minScoreDiff = Integer.MAX_VALUE;
 	
 	public Database () {
-		teamNames = new String[teamNum];
-		teamShortNames = new String[teamNum];
+		teams = new Team[teamNum];
 		teamIndex = new HashMap<String, Integer>();
 		gameStatDataList = new ArrayList<GameStatData>();
 		winLostCellList = new ArrayList<WinLostCellData>();
@@ -50,14 +48,35 @@ public class Database {
 				System.out.println("winLostCellList is null");
 				return;
 			} 
-			String line;
+			String line = br.readLine();
 			String[] array;
+			String[] arrayForCityName;
 			int index = 0;
 			while ((line = br.readLine()) != null) {
 				array = line.split(",");
-				teamNames[index] = array[1];
-				teamShortNames[index] = array[2];
+				arrayForCityName = array[1].split(" ");
+				
+				teams[index] = new Team(arrayForCityName[0], arrayForCityName[arrayForCityName.length - 1], array[array.length - 1]);
+				teams[index].index = index;
 				teamIndex.put(array[1], index);
+				
+				teams[index].setOverall(splitStub(array[2]));
+				teams[index].setHome(splitStub(array[3]));
+				teams[index].setRoad(splitStub(array[4]));
+				teams[index].setEastOppo(splitStub(array[5]));
+				teams[index].setWestOppo(splitStub(array[6]));
+				teams[index].setPreAllStar(splitStub(array[13]));
+				teams[index].setPostAllStar(splitStub(array[14]));
+				teams[index].setMarginLess3(splitStub(array[15]));
+				teams[index].setMarginMore10(splitStub(array[16]));
+				teams[index].setOct(splitStub(array[17]));
+				teams[index].setNov(splitStub(array[18]));
+				teams[index].setDec(splitStub(array[19]));
+				teams[index].setJan(splitStub(array[20]));
+				teams[index].setFeb(splitStub(array[21]));
+				teams[index].setMar(splitStub(array[22]));
+				teams[index].setApr(splitStub(array[23]));
+				
 				index++;
 			}
 		} catch (IOException ioe) {

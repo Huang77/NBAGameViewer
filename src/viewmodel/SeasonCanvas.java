@@ -2,6 +2,7 @@ package viewmodel;
 
 import java.util.ArrayList;
 
+import datamodel_new.Team;
 import datamodel_new.Database;
 import datamodel_new.GameStatData;
 import datamodel_new.WinLostCellData;
@@ -31,8 +32,15 @@ public class SeasonCanvas extends PApplet {
 	int cellSize;
 	int cellGap = 2;
 	
+	int teamBarLeftTopX = 20, teamBarLeftTopY = leftTopY;
+	int leftTeamBarWidth = leftTopX - teamBarLeftTopX - 5;
+	
 	Database database;
 	WinLostCell[] winLostCellList;
+	LeftTeamBar[] leftTeamBarList;
+	
+	
+	int leftHoverTextIndex, topHoverTextIndex;
 	
 	public SeasonCanvas() {
 		
@@ -85,12 +93,26 @@ public class SeasonCanvas extends PApplet {
 				for (int j = 0; j < gameCount; j++) {
 					tempData = database.gameStatDataList.get(gameIndex.get(j));
 					scoreDiff = Math.abs(tempData.leftScore - tempData.rightScore);
-					System.out.println(scoreDiff);
 					barColor = tempData.getWinTeamIndex() == tempCellData.getLeftTeamIndex() ? this.colorForWinBar : this.colorForLoseBar;
-					barWidth = (int) this.map(scoreDiff, database.minScoreDiff, database.maxScoreDiff, minWidth, maxWidth);
+					barWidth = (int) map(scoreDiff, database.minScoreDiff, database.maxScoreDiff, minWidth, maxWidth);
 					winLostCellList[i].addLittleGameBar(x, y + j * (barHeight + barGap), barWidth, barHeight, barColor);
 				}
 			}
+		}
+	}
+	
+	public void setupLeftTeamBar () {
+		leftTeamBarList = new LeftTeamBar[database.teamNum];
+		int frontWidth;
+		Team tempTeam;
+		int[] tempWinLost;
+		for (int i = 0; i < database.teamNum; i++) {
+			tempTeam = database.teams[i];
+			tempWinLost = tempTeam.getOverall();
+			leftTeamBarList[i] = new LeftTeamBar(tempTeam.index);
+			leftTeamBarList[i].setBackgroundRectSize(teamBarLeftTopX, teamBarLeftTopY + i * (cellSize + cellGap), leftTeamBarWidth, cellSize);
+			frontWidth = (int) map(tempWinLost[0], 0, tempWinLost[0] + tempWinLost[1], 0, leftTeamBarWidth);
+			leftTeamBarList[i].setFrontRectSize(teamBarLeftTopX, teamBarLeftTopY + i * (cellSize + cellGap), frontWidth, cellSize);
 		}
 	}
 
@@ -100,21 +122,18 @@ public class SeasonCanvas extends PApplet {
     	textFont(font);
     	
     	setupWinLostCell();
-    	System.out.println("Finish Setup");
+    	setupLeftTeamBar();
+    
     }
 	
     @Override
 	public void draw () {
     	background(255);
     	smooth();
-/*    		winLostCellList[0].draw(this);
-    		winLostCellList[1].draw(this);
-    		winLostCellList[2].draw(this);
-    		winLostCellList[3].draw(this);
-    		winLostCellList[4].draw(this);
-    		winLostCellList[5].draw(this);*/
+
     	drawAllWinLostCells();
-    	drawLeftTeamNames();
+    	drawLeftTeamBars();
+    	//drawLeftTeamNames();
     	drawTopTeamNames();
 
     }
@@ -125,14 +144,24 @@ public class SeasonCanvas extends PApplet {
     	}
     }
     
+    public void drawLeftTeamBars () {
+    	for (int i = 0; i < leftTeamBarList.length; i++) {
+    		leftTeamBarList[i].draw(this);
+    	}
+    }
+    
     public void drawLeftTeamNames () {
     	int x = leftTopX - 5;
     	int y = leftTopY;
     	this.pushStyle();
-    	this.fill(0);
+    	
     	this.textAlign(PApplet.RIGHT, PApplet.TOP);
     	for (int i = 0; i < database.teamNum; i++) {
-    		this.text(database.teamNames[i], x, y + i * (cellSize + cellGap));
+    		this.fill(0);
+    		if (i == leftHoverTextIndex) {
+    			this.fill(250,0,0);
+    		}
+    		this.text(database.teams[i].name, x, y + i * (cellSize + cellGap));
     	}
     	this.popStyle();
     }
@@ -142,15 +171,30 @@ public class SeasonCanvas extends PApplet {
     	int y = leftTopY - 2;
     	//this.rotate(-PApplet.QUARTER_PI);
     	this.pushStyle();
-    	this.fill(0);
     	this.textAlign(PApplet.LEFT);
     	for (int i = 0; i < database.teamNum; i++) {
+        	this.fill(0);
+        	if (i == topHoverTextIndex) {
+        		this.fill(250,0,0);
+        	}
     		this.pushMatrix();
     		this.translate(x + i * (cellSize + cellGap), y);
     		this.rotate(-PApplet.QUARTER_PI);
-    		this.text(database.teamShortNames[i], 0, 0);
+    		this.text(database.teams[i].shortName, 0, 0);
     		this.popMatrix();
     	}
     	this.popStyle();
+    }
+    
+    public void mouseMoved () {
+    	if (mouseX > leftTopX && mouseY > leftTopY
+    			&& mouseX < leftTopX + database.teamNum * (cellSize + cellGap)
+    			&& mouseY < leftTopY + database.teamNum * (cellSize + cellGap)) {
+    		topHoverTextIndex = (mouseX - leftTopX) / (cellSize + cellGap);
+    		leftHoverTextIndex = (mouseY - leftTopY) / (cellSize + cellGap);
+    	} else {
+    		leftHoverTextIndex = -1;
+    		topHoverTextIndex = -1;
+    	}
     }
 }
