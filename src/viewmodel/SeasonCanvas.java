@@ -1,10 +1,13 @@
 package viewmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import datamodel_new.Team;
 import datamodel_new.Database;
 import datamodel_new.GameStatData;
+import datamodel_new.TeamSortByOverall;
+import datamodel_new.TeamSortType;
 import datamodel_new.WinLostCellData;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -36,9 +39,10 @@ public class SeasonCanvas extends PApplet {
 	int leftTeamBarWidth = leftTopX - teamBarLeftTopX - 5;
 	
 	Database database;
-	WinLostCell[] winLostCellList;
+	WinLostCell[][] winLostCellList;
 	LeftTeamBar[] leftTeamBarList;
 	
+	int[] teamSortIndex;
 	
 	int leftHoverTextIndex, topHoverTextIndex;
 	
@@ -54,30 +58,29 @@ public class SeasonCanvas extends PApplet {
 	
 	public void setupWinLostCell () {
 		cellSize = (int) (height * 0.8 / database.teamNum - cellGap);
-		this.winLostCellList = new WinLostCell[database.teamNum * database.teamNum];
-		int tempX = leftTopX, tempY = leftTopY - cellSize - cellGap;
+		this.winLostCellList = new WinLostCell[database.teamNum][database.teamNum];
+		int tempX = leftTopX, tempY = leftTopY;
 		
+		int lineIndex, oppoIndex;
 		WinLostCellData tempCellData;
 		for (int i = 0; i < database.winLostCellList.size(); i++) {
 			tempCellData = database.winLostCellList.get(i);
 			
-			if (i % 30 == 0) {
-				tempX = leftTopX;
-				tempY = tempY + cellSize + cellGap;
-			} else {
-				tempX = tempX + cellSize + cellGap;
-			}
-			winLostCellList[i] = new WinLostCell(tempX, tempY, cellSize, cellSize);
+			lineIndex = i / 30;
+			oppoIndex = i % 30;
+			tempX  = leftTopX + oppoIndex * (cellSize + cellGap);
+			tempY = leftTopY + + lineIndex * (cellSize + cellGap);
+			winLostCellList[lineIndex][oppoIndex] = new WinLostCell(tempX, tempY , cellSize, cellSize);
 			if (tempCellData.isSelfTeam()) {  // the cell is a self cell
-				winLostCellList[i].setColor(whiteColor);
+				winLostCellList[lineIndex][oppoIndex].setColor(whiteColor);
 			} else if (!tempCellData.hasPlayed()) { // the two teams have not played a game yet
-				winLostCellList[i].setColor(whiteColor);
+				winLostCellList[lineIndex][oppoIndex].setColor(whiteColor);
 			} else {  // the two games have player at least one game, and here will set the game bar 
 				int winCompare = tempCellData.winCompare();
 				switch (winCompare) {
-					case 1 : winLostCellList[i].setColor(colorForWinMore); break;
-					case 0 : winLostCellList[i].setColor(colorForWinEqual); break;
-					case -1: winLostCellList[i].setColor(colorForWinLess); break;
+					case 1 : winLostCellList[lineIndex][oppoIndex].setColor(colorForWinMore); break;
+					case 0 : winLostCellList[lineIndex][oppoIndex].setColor(colorForWinEqual); break;
+					case -1: winLostCellList[lineIndex][oppoIndex].setColor(colorForWinLess); break;
 				}
 				ArrayList<Integer> gameIndex = tempCellData.getGameIndexes();
 				int gameCount = gameIndex.size();
@@ -95,9 +98,22 @@ public class SeasonCanvas extends PApplet {
 					scoreDiff = Math.abs(tempData.leftScore - tempData.rightScore);
 					barColor = tempData.getWinTeamIndex() == tempCellData.getLeftTeamIndex() ? this.colorForWinBar : this.colorForLoseBar;
 					barWidth = (int) map(scoreDiff, database.minScoreDiff, database.maxScoreDiff, minWidth, maxWidth);
-					winLostCellList[i].addLittleGameBar(x, y + j * (barHeight + barGap), barWidth, barHeight, barColor);
+					winLostCellList[lineIndex][oppoIndex].addLittleGameBar(x, y + j * (barHeight + barGap), barWidth, barHeight, barColor);
 				}
 			}
+		}
+	}
+	
+	public void resetWinLostCellPosition () {
+		for (int i = 0; i < teamSortIndex.length; i++) {
+			for (int j = 0; j < database.teamNum; j++) {
+				winLostCellList[teamSortIndex[i]][j].setNewPosition(leftTopX + j * (cellSize + cellGap), leftTopY + i * (cellSize + cellGap));
+			}
+		}
+	}
+	public void resetTeamBarPosition () {
+		for (int i = 0; i < teamSortIndex.length; i++) {
+			leftTeamBarList[teamSortIndex[i]].setNewPosition(teamBarLeftTopX, teamBarLeftTopY + i * (cellSize + cellGap));
 		}
 	}
 	
@@ -115,15 +131,40 @@ public class SeasonCanvas extends PApplet {
 			leftTeamBarList[i].setFrontRectSize(teamBarLeftTopX, teamBarLeftTopY + i * (cellSize + cellGap), frontWidth, cellSize);
 		}
 	}
+	
+	public void setTeamOrder (TeamSortType sortType) {
+		if (teamSortIndex == null) {
+			teamSortIndex = new int[database.teamNum];
+		}
+		
+		
+		switch (sortType) {
+			case Overall:
+				Arrays.sort(database.teams, new TeamSortByOverall());
+				for (int i = 0; i < database.teamNum; i++) {
+					teamSortIndex[i] = database.teams[i].index;
+				}
+				break;
+			case Name:
+			default: 
+				for (int i = 0; i < database.teamNum; i++) {
+					teamSortIndex[i] = i;
+				}
+		}
+
+
+	}
 
     @Override
     public void setup () {
     	size(this.width, this.height);
     	textFont(font);
-    	
+    	setTeamOrder(TeamSortType.Name);
     	setupWinLostCell();
     	setupLeftTeamBar();
-    
+    	setTeamOrder(TeamSortType.Overall);
+		resetWinLostCellPosition();
+		resetTeamBarPosition();
     }
 	
     @Override
@@ -139,8 +180,10 @@ public class SeasonCanvas extends PApplet {
     }
     
     public void drawAllWinLostCells () {
-    	for (int i = 0; i < 900; i++) {
-    		winLostCellList[i].draw(this);
+    	for (int i = 0; i < database.teamNum; i++) {
+    		for (int j = 0; j < database.teamNum; j++) {
+    			winLostCellList[i][j].draw(this);
+    		}
     	}
     }
     
@@ -161,7 +204,7 @@ public class SeasonCanvas extends PApplet {
     		if (i == leftHoverTextIndex) {
     			this.fill(250,0,0);
     		}
-    		this.text(database.teams[i].name, x, y + i * (cellSize + cellGap));
+    		this.text(database.teamIndex.get(i), x, y + i * (cellSize + cellGap));
     	}
     	this.popStyle();
     }
@@ -180,7 +223,7 @@ public class SeasonCanvas extends PApplet {
     		this.pushMatrix();
     		this.translate(x + i * (cellSize + cellGap), y);
     		this.rotate(-PApplet.QUARTER_PI);
-    		this.text(database.teams[i].shortName, 0, 0);
+    		this.text(database.teamsMap.get(i).shortName, 0, 0);
     		this.popMatrix();
     	}
     	this.popStyle();
@@ -191,7 +234,7 @@ public class SeasonCanvas extends PApplet {
     			&& mouseX < leftTopX + database.teamNum * (cellSize + cellGap)
     			&& mouseY < leftTopY + database.teamNum * (cellSize + cellGap)) {
     		topHoverTextIndex = (mouseX - leftTopX) / (cellSize + cellGap);
-    		leftHoverTextIndex = (mouseY - leftTopY) / (cellSize + cellGap);
+    		leftHoverTextIndex = teamSortIndex[(mouseY - leftTopY) / (cellSize + cellGap)];
     	} else {
     		leftHoverTextIndex = -1;
     		topHoverTextIndex = -1;

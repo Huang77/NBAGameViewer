@@ -27,10 +27,21 @@ public class WinLostCell {
 	public void addLittleGameBar (int x, int y, int width, int height, int[] color) {
 		gameBarList.add(new LittleGameBar(x, y, width, height, color));
 	}
-
+	
+	public void setNewPosition (int newX, int newY) {
+		int transX = newX - (int)rect.x;
+		int transY = newY - (int)rect.y;
+		rect.x = newX;
+		rect.y = newY;
+		for (int i = 0; i < gameBarList.size(); i++) {
+			gameBarList.get(i).leftTopX += transX;
+			gameBarList.get(i).leftTopY += transY;
+		}
+		
+	}
 	
 	public void draw (PApplet canvas) {
-		canvas.pushMatrix();
+		canvas.pushStyle();
 		canvas.stroke(180, 180, 180);
 		canvas.strokeWeight(strokeW);
 		if (canvas.mouseX < rect.x + rect.width && canvas.mouseX > rect.x &&
@@ -44,7 +55,7 @@ public class WinLostCell {
 		for (int i = 0; i < gameBarList.size(); i++) {
 			gameBarList.get(i).draw(canvas);
 		}		
-		canvas.popMatrix();
+		canvas.popStyle();
 	}
 	
 	

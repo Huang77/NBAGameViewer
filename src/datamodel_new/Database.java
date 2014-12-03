@@ -11,6 +11,7 @@ public class Database {
 	public final int teamNum = 30;
 	public Team[] teams;
 	public HashMap<String, Integer> teamIndex;
+	public HashMap<Integer, Team> teamsMap;
 	public ArrayList<GameStatData> gameStatDataList;
 	public ArrayList<WinLostCellData> winLostCellList;
 	public int maxScoreDiff = Integer.MIN_VALUE;
@@ -19,16 +20,18 @@ public class Database {
 	public Database () {
 		teams = new Team[teamNum];
 		teamIndex = new HashMap<String, Integer>();
+		teamsMap = new HashMap<Integer, Team>();
 		gameStatDataList = new ArrayList<GameStatData>();
 		winLostCellList = new ArrayList<WinLostCellData>();
 	}
 	
-	public Database (String teamNameFile, String winLostFile, String gameStatFile) {
+	public Database (String teamNameFile, String winLostFile, String gameStatFile, String allGameDataFile) {
 		this();
 		readTeamNames(teamNameFile);
 		readWinLostCellData(winLostFile);
 		readAllGameStatData(gameStatFile);
 		setGameIndexofCellData();
+		readGameEvent(allGameDataFile);
 	}
 	
 	
@@ -59,6 +62,7 @@ public class Database {
 				teams[index] = new Team(arrayForCityName[0], arrayForCityName[arrayForCityName.length - 1], array[array.length - 1]);
 				teams[index].index = index;
 				teamIndex.put(array[1], index);
+				teamsMap.put(index, teams[index]);
 				
 				teams[index].setOverall(splitStub(array[2]));
 				teams[index].setHome(splitStub(array[3]));
@@ -209,6 +213,180 @@ public class Database {
 				}
 				if (minScoreDiff > scoreDiff) {
 					minScoreDiff = scoreDiff;
+				}
+			}
+			
+			
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+			
+			if (fr != null) {
+				try {
+					fr.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void readGameEvent (String fileName) {
+		File file = null;
+		FileReader fr = null;
+		BufferedReader br = null;
+		
+		try {
+			
+			file = new File(fileName);
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			
+			String line;
+			String[] array;
+			
+			int gameIndex;  // 0
+			int quarter;    // 1
+			int timeIndex;  // 2
+			int curLeftScore; // 4
+			int curRightScore; // 5
+			int actionTeamIndex;
+			String actionTeam; //8
+			String actionPlayer; //9
+			String actionType; // 10
+				
+			GameStatData tempStatData;
+			
+			while ((line = br.readLine()) != null) {
+				array = line.split(",");
+				if (array[8].equals("start") || array[8].endsWith("end")) continue;
+				gameIndex = Integer.parseInt(array[0]);
+				tempStatData = gameStatDataList.get(gameIndex);
+				
+				quarter = Integer.parseInt(array[1]);
+				timeIndex = Integer.parseInt(array[2]);
+				curLeftScore = Integer.parseInt(array[4]);
+				curRightScore = Integer.parseInt(array[5]);
+				
+				
+				
+				System.out.println(gameIndex + " : " + timeIndex);
+				
+				
+				actionTeam = array[8];
+				if (actionTeam.startsWith("LA")) {
+					actionTeam = array[8].split(" ")[1];
+					if (actionTeam.equals(teamsMap.get(tempStatData.leftTeamIndex).name)) {
+						actionTeamIndex = tempStatData.leftTeamIndex;
+					} else {
+						actionTeamIndex = tempStatData.rightTeamIndex;
+					}
+				} else {
+					if (actionTeam.startsWith(teamsMap.get(tempStatData.leftTeamIndex).city)) {
+						actionTeamIndex = tempStatData.leftTeamIndex;
+					} else {
+						actionTeamIndex = tempStatData.rightTeamIndex;
+					}
+					
+				}
+				actionPlayer = array[9];
+				actionType = array[10];
+				
+				if (actionType.equals("made")) {
+					MadeScoreEvent event = new MadeScoreEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
+					int point = 0, distance;
+					if (array[11].equals("free") || array[11].equals("clear")) {
+						point = 1;
+					} else if (array[11].equals("technical")) {
+						point = -1;  // this is technical miss
+					} else {
+						if (array[11].equals("2-pt")) {
+							point = 2;
+						} else if (array[11].equals("3-pt")) {
+							point = 3;
+						}
+						
+						if (array[12].equals("rim")) {
+							distance = -1;
+						} else {
+							distance = Integer.parseInt(array[12]);
+						}
+						event.setDistance(distance);
+						
+						// length > 13 means there is assist
+						if (array.length > 13) {
+							event.setAssistedPlayer(array[13]);
+						}
+						
+					}
+					event.setPoint(point);
+					tempStatData.eventList.add(event);
+					
+				} else if (actionType.equals("miss")) {
+					MissScoreEvent event = new MissScoreEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
+					int point = 0, distance;
+					if (array[11].equals("free") || array[11].equals("clear")) {
+						point = 1;
+					} else if (array[11].equals("technical")) {
+						point = -1;  // this is technical miss
+					} else {
+						if (array[11].equals("2-pt")) {
+							point = 2;
+						} else if (array[11].equals("3-pt")) {
+							point = 3;
+						}
+						
+						if (array[12].equals("rim")) {
+							distance = -1;
+						} else {
+							distance = Integer.parseInt(array[12]);
+						}
+						event.setDistance(distance);
+						
+						// length > 13 means there is assist
+						if (array.length > 13) {
+							event.setBlockPlayer(array[13]);
+						}
+						
+					}
+					event.setPoint(point);
+					tempStatData.eventList.add(event);
+					
+					
+				} else if (actionType.equals("rebound")) {
+					ReboundEvent event = new ReboundEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
+					event.setReboundType(array[11]);
+					tempStatData.eventList.add(event);
+					
+				} else if (actionType.equals("foul")) {
+					FoulEvent event = new FoulEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
+					event.setFoulType(array[11]);
+					if (array.length > 13) {
+						event.setFoulPlayer(array[13]);
+					}
+					tempStatData.eventList.add(event);
+				} else if (actionType.equals("enter")) {
+					EnterEvent event = new EnterEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
+					event.setLeftPlayer(array[13]);
+					tempStatData.eventList.add(event);
+				} else if (actionType.equals("turnover")) {
+					TurnoverEvent event = new TurnoverEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
+					event.setTurnoverType(array[11]);
+					if (array.length > 13) {
+						event.setStealPlayer(array[13]);
+					}
+					tempStatData.eventList.add(event);
+				} else if (actionType.equals("timeout")) {
+					TimeoutEvent event = new TimeoutEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
+					event.setTimeoutType(array[11]);
+					tempStatData.eventList.add(event);
 				}
 			}
 			

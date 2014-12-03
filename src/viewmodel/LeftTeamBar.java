@@ -41,8 +41,18 @@ public class LeftTeamBar {
 		colorFront[2] = color[2];
 	}
 	
+	public void setNewPosition (int newX, int newY) {
+		int transX = newX - (int) rectBackground.x;
+		int transY = newY - (int) rectBackground.y;
+		rectBackground.x = newX;
+		rectBackground.y = newY;
+		rectFront.x += transX;
+		rectFront.y += transY;
+	}
+	
 	public void draw (SeasonCanvas canvas) {
 		canvas.pushStyle();
+		canvas.stroke(180, 180, 180);
 		canvas.strokeWeight(strokeW);
 		canvas.fill(colorBackground[0], colorBackground[1], colorBackground[2]);
 		canvas.rect(rectBackground.x, rectBackground.y, rectBackground.width, rectBackground.height);
@@ -55,7 +65,7 @@ public class LeftTeamBar {
         if (this.teamIndex == canvas.leftHoverTextIndex) {
         	canvas.fill(250,0,0);
         }
-    	canvas.text(canvas.database.teams[teamIndex].name, rectBackground.x + rectBackground.width - 5, rectBackground.y + rectBackground.height / 2);
+    	canvas.text(canvas.database.teamsMap.get(teamIndex).name, rectBackground.x + rectBackground.width - 5, rectBackground.y + rectBackground.height / 2);
 		canvas.popStyle();
 	}
 }

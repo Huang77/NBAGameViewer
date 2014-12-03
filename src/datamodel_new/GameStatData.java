@@ -1,5 +1,7 @@
 package datamodel_new;
 
+import java.util.ArrayList;
+
 public class GameStatData {
 	public int index;
 	public String date;
@@ -8,6 +10,8 @@ public class GameStatData {
 	public int leftScore;
 	public int rightScore;
 	public boolean overtime = false;
+	
+	ArrayList<Event> eventList = new ArrayList<Event>();
 	
 	public boolean isLeftWin () {
 		return leftScore > rightScore ? true : false;
