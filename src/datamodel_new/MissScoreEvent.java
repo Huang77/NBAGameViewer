@@ -18,6 +18,9 @@ public class MissScoreEvent extends Event {
 	public void setPoint (int point) {
 		this.point = point;
 	}
+	public int getPoint () {
+		return point;
+	}
 	
 	public void setDistance (int distance) {
 		this.distance = distance;

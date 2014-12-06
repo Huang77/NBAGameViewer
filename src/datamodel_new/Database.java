@@ -277,7 +277,7 @@ public class Database {
 				
 				
 				
-				System.out.println(gameIndex + " : " + timeIndex);
+				//System.out.println(gameIndex + " : " + timeIndex);
 				
 				
 				actionTeam = array[8];
@@ -305,7 +305,7 @@ public class Database {
 					if (array[11].equals("free") || array[11].equals("clear")) {
 						point = 1;
 					} else if (array[11].equals("technical")) {
-						point = -1;  // this is technical miss
+						point = 2;  // this is technical miss
 					} else {
 						if (array[11].equals("2-pt")) {
 							point = 2;
@@ -335,7 +335,7 @@ public class Database {
 					if (array[11].equals("free") || array[11].equals("clear")) {
 						point = 1;
 					} else if (array[11].equals("technical")) {
-						point = -1;  // this is technical miss
+						point = 2;  // this is technical miss
 					} else {
 						if (array[11].equals("2-pt")) {
 							point = 2;

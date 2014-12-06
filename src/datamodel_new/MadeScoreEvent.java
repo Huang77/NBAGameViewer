@@ -23,6 +23,10 @@ public class MadeScoreEvent extends Event {
 		this.distance = distance;
 	}
 	
+	public int getPoint () {
+		return point;
+	}
+	
 	public void setAssistedPlayer(String player) {
 		assistPlayer = player;
 		assisted = true;

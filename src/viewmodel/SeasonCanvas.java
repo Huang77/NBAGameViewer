@@ -3,6 +3,9 @@ package viewmodel;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import datamodel_new.Event;
+import datamodel_new.MadeScoreEvent;
+import datamodel_new.MissScoreEvent;
 import datamodel_new.Team;
 import datamodel_new.Database;
 import datamodel_new.GameStatData;
@@ -21,6 +24,8 @@ public class SeasonCanvas extends PApplet {
 	final int[] whiteColor = {240,240,240};
 	
 
+	
+	
 	/**
 	 * 
 	 */
@@ -45,6 +50,105 @@ public class SeasonCanvas extends PApplet {
 	int[] teamSortIndex;
 	
 	int leftHoverTextIndex, topHoverTextIndex;
+	
+	
+	// test diff score horizon graph
+	SingleGameView singleGame;
+	
+	
+	public void setSingleGameView (int gameIndex, int startX, int startY) {
+		int width = 900;
+		singleGame = new SingleGameView(gameIndex);
+		singleGame.diffGraph = setDiffGraph(gameIndex, startX, startY, width, 100);
+		int circleY = startY + 100 + 100;
+		ArrayList<Event> eventList = database.gameStatDataList.get(gameIndex).getEventList();
+		Event event;
+		ScoreEventCircleLine lastLine = null;
+		ShootCircle circle;
+		int rx, ry = startY;
+		for (int i = 0; i < eventList.size(); i++) {
+			event = eventList.get(i);
+			System.out.println(event.getTimeIndex());
+			if (event instanceof MadeScoreEvent) {
+				MadeScoreEvent e = (MadeScoreEvent) event;
+				circle = new ShootCircle(e.getPoint(), true);
+				rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + 900);
+				circle.setPosition(rx, startY);
+				if (lastLine == null) {
+					lastLine = new ScoreEventCircleLine(rx, startY, true);
+					lastLine.addShootCircle(circle);
+				} else {
+					if (lastLine.made == true) {
+						lastLine.addShootCircle(circle);
+					} else {
+						singleGame.circleLines.add(lastLine);
+						lastLine = new ScoreEventCircleLine(rx, startY, true);
+						lastLine.addShootCircle(circle);
+					}
+				}
+			} else if (event instanceof MissScoreEvent) {
+				MissScoreEvent e = (MissScoreEvent) event;
+				circle = new ShootCircle(e.getPoint(), false);
+				rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + 900);
+				circle.setPosition(rx, startY);
+				if (lastLine == null) {
+					lastLine = new ScoreEventCircleLine(rx, startY, false);
+					lastLine.addShootCircle(circle);
+				} else {
+					if (lastLine.made == false) {
+						lastLine.addShootCircle(circle);
+					} else {
+						singleGame.circleLines.add(lastLine);
+						lastLine = new ScoreEventCircleLine(rx, startY, false);
+						lastLine.addShootCircle(circle);
+					}
+				}
+			}
+		}
+		
+	}
+	
+	
+	public DiffHorizonGraph setDiffGraph (int gameIndex, int x0, int y0, int width, int height) {
+		int graphX = x0, graphY = y0;
+		DiffHorizonGraph diffGraph = new DiffHorizonGraph(gameIndex);
+		diffGraph.setBackgroundRect(graphX, graphY, width, height);
+		ArrayList<Event> eventList = database.gameStatDataList.get(gameIndex).getEventList();
+		int i = 0;
+		int startX = 0, endX;
+		int scoreDiff = 0;
+		int numOfEvent = eventList.size();
+		for (; i < numOfEvent - 1; i++) {
+			if (eventList.get(i) instanceof MadeScoreEvent) {
+				
+				endX = translateTimeIndexToXPos(eventList.get(i).getTimeIndex(), 4, graphX, graphX + width);
+				if (endX > 950) {
+					System.out.println(eventList.get(i).getTimeIndex());
+				}
+				diffGraph.addInsideRectList(scoreDiff, startX, endX - startX);
+				startX = endX;
+				scoreDiff = eventList.get(i).getScoreDiff();
+			}
+		}
+		endX = graphX + width;
+		diffGraph.addInsideRectList(scoreDiff, startX, endX - startX);
+		return diffGraph;
+	}
+	
+	public int translateTimeIndexToXPos (int timeIndex, int maxQuarter, int startX, int endX) {
+		int maxTimeIndex = 4 * 12 * 60;
+		if (maxQuarter < 4) {
+			System.out.println("Error: The number of quarter is less than 4!");
+			System.exit(1);
+		} else if (maxQuarter > 4) {
+			// overtime
+		}
+		
+		return (int) PApplet.map(timeIndex, 0, maxTimeIndex , startX , endX);
+	}
+	
+	
+	
 	
 	public SeasonCanvas() {
 		
@@ -165,6 +269,7 @@ public class SeasonCanvas extends PApplet {
     	setTeamOrder(TeamSortType.Overall);
 		resetWinLostCellPosition();
 		resetTeamBarPosition();
+		setSingleGameView(0, leftTopX, leftTopY);
     }
 	
     @Override
@@ -176,6 +281,8 @@ public class SeasonCanvas extends PApplet {
     	drawLeftTeamBars();
     	//drawLeftTeamNames();
     	drawTopTeamNames();
+    	//diffGraph.draw(this);
+    	singleGame.draw(this);
 
     }
     

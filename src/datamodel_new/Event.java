@@ -28,4 +28,13 @@ public class Event {
 		int milSec = Integer.parseInt(array[2]);
 		return 720 - (min * 60 + sec);
 	}
+	public int getTimeIndex () {
+		return timeIndex;
+	}
+	public String getType () {
+		return type;
+	}
+	public int getScoreDiff () {
+		return curLeftScore - curRightScore;
+	}
 }

@@ -19,4 +19,7 @@ public class GameStatData {
 	public int getWinTeamIndex () {
 		return isLeftWin() ? leftTeamIndex : rightTeamIndex;
 	}
+	public ArrayList<Event> getEventList () {
+		return this.eventList;
+	}
 }
