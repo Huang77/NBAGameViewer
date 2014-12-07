@@ -37,4 +37,7 @@ public class Event {
 	public int getScoreDiff () {
 		return curLeftScore - curRightScore;
 	}
+	public int getActionTeamIndex () {
+		return actionTeamIndex;
+	}
 }

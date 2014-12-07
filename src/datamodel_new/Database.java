@@ -302,7 +302,7 @@ public class Database {
 				if (actionType.equals("made")) {
 					MadeScoreEvent event = new MadeScoreEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
 					int point = 0, distance;
-					if (array[11].equals("free") || array[11].equals("clear")) {
+					if (array[11].equals("free") || array[11].equals("clear") || array[11].equals("flagrant")) {
 						point = 1;
 					} else if (array[11].equals("technical")) {
 						point = 2;  // this is technical miss
@@ -332,7 +332,7 @@ public class Database {
 				} else if (actionType.equals("miss")) {
 					MissScoreEvent event = new MissScoreEvent(actionType, actionPlayer, quarter, timeIndex, actionTeamIndex, curLeftScore, curRightScore);
 					int point = 0, distance;
-					if (array[11].equals("free") || array[11].equals("clear")) {
+					if (array[11].equals("free") || array[11].equals("clear") || array[11].equals("flagrant")) {
 						point = 1;
 					} else if (array[11].equals("technical")) {
 						point = 2;  // this is technical miss

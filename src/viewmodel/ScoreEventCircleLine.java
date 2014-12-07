@@ -22,8 +22,8 @@ public class ScoreEventCircleLine {
 		int lastIndex = circleList.size() - 1;
 		if (lastIndex > 0) {
 			int x = (int) circleList.get(lastIndex - 1).circle.x;
-			int y = startY - barHeight / 2;
-			int w = (int) (circleList.get(lastIndex).circle.x - circleList.get(lastIndex).circle.x);
+			int y = startY - barHeight / 2 ;
+			int w = (int) (circleList.get(lastIndex).circle.x - circleList.get(lastIndex - 1).circle.x);
 			ShootCircleConnectBar bar = new ShootCircleConnectBar(x, y, w, barHeight);
 			if (circleList.get(0).made == true) {
 				bar.setColor(circleList.get(0).color[3], circleList.get(0).color[4], circleList.get(0).color[5]);

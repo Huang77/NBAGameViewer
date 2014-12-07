@@ -85,6 +85,7 @@ public class DiffHorizonGraph {
 		public void draw (SeasonCanvas canvas) {
 
 			canvas.pushStyle();
+			
 			canvas.fill(this.color[0], this.color[1], this.color[2]);
 			canvas.noStroke();
 			canvas.rect(rect.x, rect.y, rect.width, rect.height);

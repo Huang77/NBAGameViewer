@@ -25,6 +25,7 @@ public class ShootCircleConnectBar {
 	}
 	public void draw (SeasonCanvas canvas) {
 		canvas.pushStyle();
+		canvas.noStroke();
 		canvas.fill(color[0], color[1], color[2]);
 		canvas.rect(rect.x, rect.y, rect.width, rect.height);
 		canvas.popStyle();

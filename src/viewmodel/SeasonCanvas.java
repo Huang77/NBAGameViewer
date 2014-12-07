@@ -57,53 +57,94 @@ public class SeasonCanvas extends PApplet {
 	
 	
 	public void setSingleGameView (int gameIndex, int startX, int startY) {
-		int width = 900;
+		int width = 1200;
 		singleGame = new SingleGameView(gameIndex);
 		singleGame.diffGraph = setDiffGraph(gameIndex, startX, startY, width, 100);
-		int circleY = startY + 100 + 100;
+		int leftCircleY = startY + 100 + 100;
+		int rightCircleY = leftCircleY + 100;
 		ArrayList<Event> eventList = database.gameStatDataList.get(gameIndex).getEventList();
 		Event event;
-		ScoreEventCircleLine lastLine = null;
+		ScoreEventCircleLine leftTeamLastLine = null;
+		ScoreEventCircleLine rightTeamLastLine = null;
 		ShootCircle circle;
 		int rx, ry = startY;
 		for (int i = 0; i < eventList.size(); i++) {
 			event = eventList.get(i);
-			System.out.println(event.getTimeIndex());
-			if (event instanceof MadeScoreEvent) {
-				MadeScoreEvent e = (MadeScoreEvent) event;
-				circle = new ShootCircle(e.getPoint(), true);
-				rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + 900);
-				circle.setPosition(rx, startY);
-				if (lastLine == null) {
-					lastLine = new ScoreEventCircleLine(rx, startY, true);
-					lastLine.addShootCircle(circle);
-				} else {
-					if (lastLine.made == true) {
-						lastLine.addShootCircle(circle);
+			if (event.getActionTeamIndex() == database.gameStatDataList.get(gameIndex).leftTeamIndex) {
+				if (event instanceof MadeScoreEvent) {
+					MadeScoreEvent e = (MadeScoreEvent) event;
+					circle = new ShootCircle(e.getPoint(), true);
+					rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + width);
+					circle.setPosition(rx, leftCircleY);
+					if (leftTeamLastLine == null) {
+						leftTeamLastLine = new ScoreEventCircleLine(rx, leftCircleY, true);
+						leftTeamLastLine.addShootCircle(circle);
 					} else {
-						singleGame.circleLines.add(lastLine);
-						lastLine = new ScoreEventCircleLine(rx, startY, true);
-						lastLine.addShootCircle(circle);
+						if (leftTeamLastLine.made == true) {
+							leftTeamLastLine.addShootCircle(circle);
+						} else {
+							singleGame.leftCircleLines.add(leftTeamLastLine);
+							leftTeamLastLine = new ScoreEventCircleLine(rx, leftCircleY, true);
+							leftTeamLastLine.addShootCircle(circle);
+						}
+					}
+				} else if (event instanceof MissScoreEvent) {
+					MissScoreEvent e = (MissScoreEvent) event;
+					circle = new ShootCircle(e.getPoint(), false);
+					rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + width);
+					circle.setPosition(rx, leftCircleY);
+					if (leftTeamLastLine == null) {
+						leftTeamLastLine = new ScoreEventCircleLine(rx, leftCircleY, false);
+						leftTeamLastLine.addShootCircle(circle);
+					} else {
+						if (leftTeamLastLine.made == false) {
+							leftTeamLastLine.addShootCircle(circle);
+						} else {
+							singleGame.leftCircleLines.add(leftTeamLastLine);
+							leftTeamLastLine = new ScoreEventCircleLine(rx, leftCircleY, false);
+							leftTeamLastLine.addShootCircle(circle);
+						}
 					}
 				}
-			} else if (event instanceof MissScoreEvent) {
-				MissScoreEvent e = (MissScoreEvent) event;
-				circle = new ShootCircle(e.getPoint(), false);
-				rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + 900);
-				circle.setPosition(rx, startY);
-				if (lastLine == null) {
-					lastLine = new ScoreEventCircleLine(rx, startY, false);
-					lastLine.addShootCircle(circle);
-				} else {
-					if (lastLine.made == false) {
-						lastLine.addShootCircle(circle);
+			} else {
+				if (event instanceof MadeScoreEvent) {
+					MadeScoreEvent e = (MadeScoreEvent) event;
+					circle = new ShootCircle(e.getPoint(), true);
+					rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + width);
+					circle.setPosition(rx, rightCircleY);
+					if (rightTeamLastLine == null) {
+						rightTeamLastLine = new ScoreEventCircleLine(rx, rightCircleY, true);
+						rightTeamLastLine.addShootCircle(circle);
 					} else {
-						singleGame.circleLines.add(lastLine);
-						lastLine = new ScoreEventCircleLine(rx, startY, false);
-						lastLine.addShootCircle(circle);
+						if (rightTeamLastLine.made == true) {
+							rightTeamLastLine.addShootCircle(circle);
+						} else {
+							singleGame.rightCircleLines.add(rightTeamLastLine);
+							rightTeamLastLine = new ScoreEventCircleLine(rx, rightCircleY, true);
+							rightTeamLastLine.addShootCircle(circle);
+						}
+					}
+				} else if (event instanceof MissScoreEvent) {
+					MissScoreEvent e = (MissScoreEvent) event;
+					circle = new ShootCircle(e.getPoint(), false);
+					rx = translateTimeIndexToXPos(e.getTimeIndex(), 4, startX, startX + width);
+					circle.setPosition(rx, rightCircleY);
+					if (rightTeamLastLine == null) {
+						rightTeamLastLine = new ScoreEventCircleLine(rx, rightCircleY, false);
+						rightTeamLastLine.addShootCircle(circle);
+					} else {
+						if (rightTeamLastLine.made == false) {
+							rightTeamLastLine.addShootCircle(circle);
+						} else {
+							singleGame.rightCircleLines.add(rightTeamLastLine);
+							rightTeamLastLine = new ScoreEventCircleLine(rx, rightCircleY, false);
+							rightTeamLastLine.addShootCircle(circle);
+						}
 					}
 				}
 			}
+				
+
 		}
 		
 	}
@@ -277,10 +318,10 @@ public class SeasonCanvas extends PApplet {
     	background(255);
     	smooth();
 
-    	drawAllWinLostCells();
-    	drawLeftTeamBars();
+    	//drawAllWinLostCells();
+    	//drawLeftTeamBars();
     	//drawLeftTeamNames();
-    	drawTopTeamNames();
+    	//drawTopTeamNames();
     	//diffGraph.draw(this);
     	singleGame.draw(this);
 
