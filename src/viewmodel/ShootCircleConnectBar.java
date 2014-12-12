@@ -31,5 +31,11 @@ public class ShootCircleConnectBar {
 		canvas.popStyle();
 	}
 	
-
+	public boolean isMouseHover (SeasonCanvas canvas) {
+		if (rect.contains(canvas.mouseX, canvas.mouseY)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

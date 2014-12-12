@@ -1,8 +1,13 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -14,19 +19,37 @@ public class SeasonViewJFrame extends JFrame {
 	final String winLostFileName = "C:/Users/HXX/Desktop/NBAGameViewer/data/winLostMatrix_2013.csv";
 	final String allGameStatFileName = "C:/Users/HXX/Desktop/NBAGameViewer/data/gameScoreList_2013.csv";
 	final String allGameDataFileName = "C:/Users/HXX/Desktop/NBAGameViewer/data/all_game_record_2013.csv";
+	final String efficiencyFile = "C:/Users/HXX/Desktop/NBA_Season_2013/plus-minus";
 	
 	SeasonCanvas seasonCanvas;
 	Database database;
+	
+	
 	JPanel leftToolBar;
 	JPanel mainPanel;
+	
+	
+	JMenuBar menuBar;
+	JMenu dataMenu;
+	JMenuItem season1314;
+	JMenuItem season1213;
+	
+	JMenu viewMenu;
+	JMenuItem oppoViewItem;
+	JMenuItem timeViewItem;
+	JMenuItem singleGameViewItem;
+	
 	
 	int winWidth = 1440, winHeight = 880;
 	int seasonCanvasWidth = winWidth, seasonCanvasHeight = winHeight;
 	
 	public SeasonViewJFrame () {
+		this.setTitle("Game Viewer");
+		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 		setSize(new Dimension(winWidth, winHeight));
 		initComponents();
 		initVisualization();
+		setMenuItemAction();
 		setVisible(true);
 	}
 	
@@ -36,12 +59,67 @@ public class SeasonViewJFrame extends JFrame {
 
 	private void initComponents() {
 		assert SwingUtilities.isEventDispatchThread();
+		
+		menuBar = new JMenuBar();
+		this.setJMenuBar(menuBar);
+		dataMenu = new JMenu("Data");
+		viewMenu = new JMenu("View");
+		menuBar.add(dataMenu);
+		menuBar.add(viewMenu);
+		oppoViewItem = new JMenuItem("Opponent View");
+		timeViewItem = new JMenuItem("Time View");
+		singleGameViewItem = new JMenuItem("Game Flow");
+		viewMenu.add(oppoViewItem);
+		viewMenu.add(timeViewItem);
+		viewMenu.add(singleGameViewItem);
+				
+		season1314 = new JMenuItem("Season 13-14");
+		season1213 = new JMenuItem("Season 12-13");
+		dataMenu.add(season1314);
+		dataMenu.add(season1213);
+		
 		mainPanel = new JPanel();
 		this.add(mainPanel);
-		
-		database = new Database(teamNameFileName, winLostFileName, allGameStatFileName, allGameDataFileName);
+		database = new Database(teamNameFileName, winLostFileName, allGameStatFileName, allGameDataFileName, efficiencyFile);
 		seasonCanvas = new SeasonCanvas(database, seasonCanvasWidth, seasonCanvasHeight);
 		mainPanel.add(seasonCanvas);
+	}
+	
+	private void setMenuItemAction () {
+		oppoViewItem.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (seasonCanvas != null) {
+					seasonCanvas.displayType = 1;
+				}
+			}
+		});
+		
+		timeViewItem.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (seasonCanvas != null) {
+					seasonCanvas.displayType = 2;
+				}
+			}
+			
+		});
+		
+		singleGameViewItem.addActionListener(new ActionListener () {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (seasonCanvas != null) {
+					seasonCanvas.displayType = 3;
+				}
+			}
+			
+		});
 	}
 	
 	public static void main (String[] args) {

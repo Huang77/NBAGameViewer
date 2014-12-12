@@ -24,8 +24,8 @@ public class WinLostCell {
 		this.color[2] = color[2];
 	}
 	
-	public void addLittleGameBar (int x, int y, int width, int height, int[] color) {
-		gameBarList.add(new LittleGameBar(x, y, width, height, color));
+	public void addLittleGameBar (int gameIndex, int x, int y, int width, int height, int[] color) {
+		gameBarList.add(new LittleGameBar(gameIndex, x, y, width, height, color));
 	}
 	
 	public void setNewPosition (int newX, int newY) {

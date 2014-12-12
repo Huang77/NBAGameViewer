@@ -62,7 +62,7 @@ public class LeftTeamBar {
 		// draw team names
     	canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
     	canvas.fill(0);
-        if (this.teamIndex == canvas.leftHoverTextIndex) {
+        if (this.teamIndex == canvas.oppoView.leftHoverTextIndex) {
         	canvas.fill(250,0,0);
         }
     	canvas.text(canvas.database.teamsMap.get(teamIndex).name, rectBackground.x + rectBackground.width - 5, rectBackground.y + rectBackground.height / 2);

@@ -40,4 +40,7 @@ public class Event {
 	public int getActionTeamIndex () {
 		return actionTeamIndex;
 	}
+	public int getQuarter () {
+		return quarter;
+	}
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ScoreEventCircleLine {
 	ArrayList<ShootCircle> circleList = new ArrayList<ShootCircle>();
 	ArrayList<ShootCircleConnectBar> bars = new ArrayList<ShootCircleConnectBar>();
-	int barHeight = 6;
+	int barHeight = 4;
 	int startX, startY; // 
 	boolean made;
 	

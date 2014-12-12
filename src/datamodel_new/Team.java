@@ -1,10 +1,15 @@
 package datamodel_new;
 
+import java.util.ArrayList;
+
 public class Team {
+	public static final int gameNum = 82;
 	public int index;
 	public String city;
 	public String name;
 	public String shortName;
+	
+	ArrayList<Integer> gameIndex = new ArrayList<Integer>();
 	
 	int[] overall;
 	int[] home;
@@ -177,6 +182,10 @@ public class Team {
 	}
 	public int[] getApr () {
 		return apr;
+	}
+	
+	public ArrayList<Integer> getGameIndex () {
+		return gameIndex;
 	}
 	
 }

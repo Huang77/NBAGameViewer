@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Database {
-	public final int teamNum = 30;
+	public static final int gameNum = 82;
+	public static final int teamNum = 30;
+	
 	public Team[] teams;
 	public HashMap<String, Integer> teamIndex;
 	public HashMap<Integer, Team> teamsMap;
+	public HashMap<Integer, GameStatData> gameMap;
 	public ArrayList<GameStatData> gameStatDataList;
 	public ArrayList<WinLostCellData> winLostCellList;
 	public int maxScoreDiff = Integer.MIN_VALUE;
@@ -21,17 +24,20 @@ public class Database {
 		teams = new Team[teamNum];
 		teamIndex = new HashMap<String, Integer>();
 		teamsMap = new HashMap<Integer, Team>();
+		gameMap = new HashMap<Integer, GameStatData>();
 		gameStatDataList = new ArrayList<GameStatData>();
 		winLostCellList = new ArrayList<WinLostCellData>();
 	}
 	
-	public Database (String teamNameFile, String winLostFile, String gameStatFile, String allGameDataFile) {
+	public Database (String teamNameFile, String winLostFile, String gameStatFile, String allGameDataFile, String efficiencyFile) {
 		this();
 		readTeamNames(teamNameFile);
 		readWinLostCellData(winLostFile);
 		readAllGameStatData(gameStatFile);
 		setGameIndexofCellData();
 		readGameEvent(allGameDataFile);
+		readPlayerEfficiency(efficiencyFile);
+		System.out.println("Database read data finished!");
 	}
 	
 	
@@ -197,16 +203,21 @@ public class Database {
 			while ((line = br.readLine()) != null) {
 				array = line.split(",");
 				GameStatData tempStatData = new GameStatData();
-				tempStatData.index = gameIndex++;
+				tempStatData.index = gameIndex;
 				tempStatData.date = array[0];
 				tempStatData.leftTeamIndex = teamIndex.get(array[2]);
+				this.teamsMap.get(tempStatData.leftTeamIndex).gameIndex.add(gameIndex);
+				
 				tempStatData.leftScore = Integer.parseInt(array[3]);
 				tempStatData.rightTeamIndex = teamIndex.get(array[4]);
+				this.teamsMap.get(tempStatData.rightTeamIndex).gameIndex.add(gameIndex);
+				
 				tempStatData.rightScore = Integer.parseInt(array[5]);
 				if (array.length >= 7 && array[6].equals("OT")) {
 					tempStatData.overtime = true;
 				}
 				gameStatDataList.add(tempStatData);
+				gameMap.put(tempStatData.index, tempStatData);
 				scoreDiff = Math.abs(tempStatData.leftScore - tempStatData.rightScore);
 				if (maxScoreDiff < scoreDiff) {
 					maxScoreDiff = scoreDiff;
@@ -214,6 +225,7 @@ public class Database {
 				if (minScoreDiff > scoreDiff) {
 					minScoreDiff = scoreDiff;
 				}
+				gameIndex++;
 			}
 			
 			
@@ -426,6 +438,93 @@ public class Database {
 				if ((tempCellData.leftTeam == tempStatData.leftTeamIndex && tempCellData.topTeam == tempStatData.rightTeamIndex) 
 						|| (tempCellData.topTeam == tempStatData.leftTeamIndex && tempCellData.leftTeam == tempStatData.rightTeamIndex)) {
 					tempCellData.gameIndex.add(tempStatData.index);
+				}
+			}
+		}
+	}
+	
+	public void readPlayerEfficiency (String folderName) {
+		File folder = new File(folderName);
+		String[] fileNames = folder.list();
+		int index;
+		for (int i = 0; i < fileNames.length; i++) {
+			index = Integer.parseInt(fileNames[i].split("-")[0]);
+			readSingleGameEfficiency(index, folderName + "/" + fileNames[i]);
+		}
+		
+	}
+	public void readSingleGameEfficiency (int gameIndex, String fileName) {
+		File file = null;
+		FileReader fr = null;
+		BufferedReader br = null;
+		
+		try {
+			
+			file = new File(fileName);
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			
+			GameStatData game = gameMap.get(gameIndex);
+			String line = br.readLine();
+			String[] array = line.split(",");
+			String leftTeamName = array[0];
+			PlayerGameStat tempPlayer = new PlayerGameStat(array[1]);
+			float sum = 0;
+			for (int i = 2; i < array.length; i += 2) {
+				sum += Integer.parseInt(array[i].substring(0, array[i].indexOf('p')));
+			}
+			int tempWidth, tempValue;
+			for (int i = 2; i < array.length; i+= 2) {
+				tempWidth = Integer.parseInt(array[i].substring(0, array[i].indexOf('p')));
+				if (array[i + 1].equals("null")) {
+					tempValue = 999;
+				} else {
+					tempValue = Integer.parseInt(array[i + 1]);
+				}
+				
+				tempPlayer.addEfficiency(1.0f * tempWidth / sum, tempValue);
+			}
+			game.leftPlayers.add(tempPlayer);
+			
+			while ((line = br.readLine()) != null) {
+				array = line.split(",");
+				tempPlayer = new PlayerGameStat(array[1]);
+				sum = 0;
+				for (int i = 2; i < array.length; i += 2) {
+					sum += Integer.parseInt(array[i].substring(0, array[i].indexOf('p')));
+				}
+				for (int i = 2; i < array.length; i+= 2) {
+					tempWidth = Integer.parseInt(array[i].substring(0, array[i].indexOf('p')));
+					if (array[i + 1].equals("null")) {
+						tempValue = 999;
+					} else {
+						tempValue = Integer.parseInt(array[i + 1]);
+					}
+					tempPlayer.addEfficiency(1.0f * tempWidth / sum, tempValue);
+				}
+				if (array[0].equals(leftTeamName)) {
+					game.leftPlayers.add(tempPlayer);
+				} else {
+					game.rightPlayers.add(tempPlayer);
+				}
+			}
+			
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+			
+			if (fr != null) {
+				try {
+					fr.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
 				}
 			}
 		}

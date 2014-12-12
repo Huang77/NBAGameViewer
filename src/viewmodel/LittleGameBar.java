@@ -9,7 +9,11 @@ public class LittleGameBar {
 	int[] color = new int[3];
 	int strokeW = 1;;
 	
-	public LittleGameBar (int x, int y, int width, int height, int color[]) {
+	int gameIndex;
+	
+	public LittleGameBar (int gameIndex, int x, int y, int width, int height, int color[]) {
+		this.gameIndex = gameIndex;
+		
 		leftTopX = x;
 		leftTopY = y;
 		this.width = width;

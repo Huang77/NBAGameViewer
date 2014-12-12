@@ -2,6 +2,8 @@ package datamodel_new;
 
 import java.util.ArrayList;
 
+
+
 public class GameStatData {
 	public int index;
 	public String date;
@@ -12,14 +14,25 @@ public class GameStatData {
 	public boolean overtime = false;
 	
 	ArrayList<Event> eventList = new ArrayList<Event>();
-	
+	ArrayList<PlayerGameStat> leftPlayers = new ArrayList<PlayerGameStat>();
+	ArrayList<PlayerGameStat> rightPlayers = new ArrayList<PlayerGameStat>();
+		
 	public boolean isLeftWin () {
 		return leftScore > rightScore ? true : false;
 	}
 	public int getWinTeamIndex () {
 		return isLeftWin() ? leftTeamIndex : rightTeamIndex;
 	}
+	public int getAwayTeam () {
+		return leftTeamIndex;
+	}
 	public ArrayList<Event> getEventList () {
 		return this.eventList;
+	}
+	public ArrayList<PlayerGameStat> getLeftPlayers () {
+		return leftPlayers;
+	}
+	public ArrayList<PlayerGameStat> getRightPlayers () {
+		return rightPlayers;
 	}
 }
