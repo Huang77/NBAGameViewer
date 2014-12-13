@@ -20,18 +20,15 @@ public class TimeView {
 	
 	
 	int leftTopX, leftTopY;
-	int circleMarginX = 50, circleMarginY = 20;
+	int circleMarginX = 0, circleMarginY = 0;
 	int width, height;
 	
 	Database database;
 	int[] verticalOrder;
-	int teamGap = 20;
+	int teamGap = 28;
 	
 	
-	HashMap<Integer, WinLostLine> teamCircleMap = new HashMap<Integer, WinLostLine>();
-	
-	
-	
+	HashMap<Integer, WinLostLine_V2> teamCircleMap = new HashMap<Integer, WinLostLine_V2>();
 	
 	public TimeView (Database database) {
 		this.database = database;
@@ -53,7 +50,7 @@ public class TimeView {
 	}
 	
 	public void setSingleTeam (int teamIndex) {
-		WinLostLine line = new WinLostLine(teamIndex, database);
+		WinLostLine_V2 line = new WinLostLine_V2(teamIndex, database);
 		line.setPosition(leftTopX + circleMarginX, leftTopY + circleMarginY + this.verticalOrder[teamIndex] * (teamGap));
 		teamCircleMap.put(teamIndex, line);
 	}
@@ -104,7 +101,7 @@ public class TimeView {
 		canvas.pushStyle();
 		Iterator iter = (Iterator) teamCircleMap.entrySet().iterator();
 		while (iter.hasNext()) {
-			WinLostLine line = (WinLostLine)((Map.Entry)iter.next()).getValue();
+			WinLostLine_V2 line = (WinLostLine_V2)((Map.Entry)iter.next()).getValue();
 			line.draw(canvas);
 		}
 		canvas.popStyle();

@@ -4,6 +4,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import processing.core.PApplet;
 import datamodel_new.Database;
 import datamodel_new.Team;
 
@@ -96,6 +97,8 @@ public class WinLostLine {
 			lastIndex = index;
 		}
 	}
+	
+
 
 	
 	public void draw (SeasonCanvas canvas) {

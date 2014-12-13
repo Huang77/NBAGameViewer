@@ -37,7 +37,7 @@ public class SeasonCanvas extends PApplet {
 	int textSize = 12;
 	PFont font = createFont("Sans Serif", textSize);
 	
-	int leftTopX = 150, leftTopY = 50;
+	int leftTopX = 150, leftTopY = 30;
 	
 	Database database;
 	// test diff score horizon graph

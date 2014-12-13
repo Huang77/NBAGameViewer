@@ -26,6 +26,9 @@ public class GameStatData {
 	public int getAwayTeam () {
 		return leftTeamIndex;
 	}
+	public int getScoreDiff () {
+		return Math.abs(leftScore - rightScore);
+	}
 	public ArrayList<Event> getEventList () {
 		return this.eventList;
 	}

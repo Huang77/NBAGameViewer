@@ -22,12 +22,12 @@ public class OppoView {
 	int width, height;
 	
 	// size of the winLostCell
-	int leftTopX = 150, leftTopY = 50;
+	int leftTopX, leftTopY;
 	int cellSize;
 	int cellGap = 2;
 		
-	int teamBarLeftTopX = 20, teamBarLeftTopY = leftTopY;
-	int leftTeamBarWidth = leftTopX - teamBarLeftTopX - 5;
+	int teamBarLeftTopX = 20, teamBarLeftTopY;
+	int leftTeamBarWidth;
 	
 	Database database;
 	WinLostCell[][] winLostCellList;
@@ -43,6 +43,8 @@ public class OppoView {
 	public void setPosition (int x, int y, int width, int height) {
 		leftTopX = x;
 		leftTopY = y;
+		teamBarLeftTopY = leftTopY;
+		leftTeamBarWidth = leftTopX - teamBarLeftTopX - 5;
 		this.width = width;
 		this.height = height;
 	}
