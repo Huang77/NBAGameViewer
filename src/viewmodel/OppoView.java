@@ -60,7 +60,7 @@ public class OppoView {
 	
 	
 	public void setupWinLostCell () {
-		cellSize = (int) (height * 0.8 / database.teamNum - cellGap);
+		cellSize = (int) (height * 0.88 / database.teamNum - cellGap);
 		this.winLostCellList = new WinLostCell[database.teamNum][database.teamNum];
 		int tempX = leftTopX, tempY = leftTopY;
 		

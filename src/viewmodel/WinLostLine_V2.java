@@ -1,11 +1,19 @@
 package viewmodel;
 
+import gui.SingleGameJFrame;
+
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 
 
+
+
+
+
+import javax.swing.JFrame;
 
 import processing.core.PApplet;
 import datamodel_new.Database;
@@ -25,8 +33,10 @@ public class WinLostLine_V2 {
 	
 	Database database;
 	int teamIndex;
+	boolean hover = false;
 	
-	DiffBar[] bars = new DiffBar[numOfGame];  
+	
+	ArrayList<WinLostStreak> streaks = new ArrayList<WinLostStreak>();  
 	int startX, startY;
 	
 	public WinLostLine_V2 (int teamIndex, Database database) {
@@ -37,10 +47,10 @@ public class WinLostLine_V2 {
 	public void setPosition (int x, int y) {
 		startX = x;
 		startY = y;
-		setDiffBars();
+		setStreaks();
 	}
 	
-	public void setDiffBars () {
+	public void setStreaks () {
 		Team curTeam = database.teamsMap.get(teamIndex);
 		int x, y;
 		
@@ -52,6 +62,8 @@ public class WinLostLine_V2 {
 		boolean win;
 		
 		ArrayList<Integer> gameIndex = curTeam.getGameIndex();
+		DiffBar curBar;
+		WinLostStreak curStreak;
 		for (int i = 0; i < numOfGame; i++) {
 			x = startX + i * (barWidth + horizonGap);
 			scoreDiff = database.gameMap.get(gameIndex.get(i)).getScoreDiff();
@@ -71,43 +83,113 @@ public class WinLostLine_V2 {
 				away = false;
 			}
 
-			bars[i] = new DiffBar(x, y, barWidth, barH);
-			bars[i].setColor(color);
-			bars[i].setAway(away);
-			bars[i].setWinLost(win);
+			curBar = new DiffBar(x, y, barWidth, barH, gameIndex.get(i), database);
+			curBar.setColor(color);
+			curBar.setAway(away);
+			curBar.setWinLost(win);
+			
+			if (streaks.size() > 0) {
+				curStreak = streaks.get(streaks.size() - 1);
+				if (curStreak.win == curBar.win) {
+					curStreak.addGameBar(curBar);
+				} else {
+					curStreak = new WinLostStreak(curBar.win);
+					curStreak.setNumPosY(startY + barHeight);
+					curStreak.addGameBar(curBar);
+					streaks.add(curStreak);
+				}
+			} else {
+				curStreak = new WinLostStreak(curBar.win);
+				curStreak.setNumPosY(startY + barHeight);
+				curStreak.addGameBar(curBar);
+				streaks.add(curStreak);
+			}
 		}
 	}
 
 	public void drawTeamName (SeasonCanvas canvas) {
 		canvas.pushStyle();
 		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+		canvas.textSize(15);
 		canvas.fill(0);
+		if (hover == true) {
+			canvas.fill(250, 0, 0);
+		}
 		canvas.text(database.teamsMap.get(teamIndex).name, startX - 10, startY + barHeight);
 		canvas.popStyle();
 	}
 	
 	public void draw (SeasonCanvas canvas) {
+		hover = false;
 		canvas.pushStyle();
-		for (int i = 0; i < bars.length; i++) {
-			bars[i].draw(canvas);
-			if (i > 0 && bars[i - 1].win == bars[i].win) {
-				canvas.stroke(50);
-				if (bars[i].win == true) {
-					canvas.line(bars[i - 1].rect.x + barWidth / 2, bars[i - 1].rect.y, bars[i].rect.x + barWidth / 2, bars[i].rect.y);
-				} else {
-					canvas.line(bars[i - 1].rect.x + barWidth / 2, bars[i - 1].rect.y + bars[i - 1].rect.height, 
-							bars[i].rect.x + barWidth / 2, bars[i].rect.y + bars[i].rect.height);
-				}
-				
+		for (int i = 0; i < streaks.size(); i++) {
+			streaks.get(i).draw(canvas);
+			if (streaks.get(i).hover == true) {
+				hover = true;
 			}
 		}
 		drawTeamName(canvas);
 		canvas.popStyle();
 	}
 	
-
+	class WinLostStreak {
+		ArrayList<DiffBar> bars = new ArrayList<DiffBar>();
+		boolean win = false;
+		int numPosX, numPosY;
+		boolean hover = false;
+		
+		public WinLostStreak (boolean win) {
+			this.win = win;
+		}
+		public void setNumPosY (int y) {
+			numPosY = y;
+		}
+		public void addGameBar (DiffBar bar) {
+			if (bars.size() > 1) {
+				numPosX = (int) ((bar.rect.x + bars.get(0).rect.x) / 2);
+			}
+			this.bars.add(bar);
+		}
+		public int getGameNum () {
+			return bars.size();
+		}
+		public void draw (SeasonCanvas canvas) {
+			hover = false;
+			canvas.pushStyle();
+			for (int i = 0; i < bars.size(); i++) {
+				bars.get(i).draw(canvas);
+				if (bars.get(i).isMouseHover(canvas)) {
+					hover = true;
+				}
+				if (i >= 1) {
+					canvas.stroke(50);
+					if (win == true) {
+						canvas.line(bars.get(i - 1).rect.x + barWidth / 2, bars.get(i - 1).rect.y, bars.get(i).rect.x + barWidth / 2, bars.get(i).rect.y);
+					} else {
+						canvas.line(bars.get(i - 1).rect.x + barWidth / 2, bars.get(i - 1).rect.y + bars.get(i - 1).rect.height, 
+								bars.get(i).rect.x + barWidth / 2, bars.get(i).rect.y + bars.get(i).rect.height);
+					}
+				}
+			}
+			
+			if (bars.size() > 0) {
+				canvas.textAlign(PApplet.CENTER, PApplet.CENTER);
+				canvas.textSize(10);
+				canvas.fill(0);
+				if (win) {
+					canvas.text(bars.size(), numPosX, numPosY + 5);
+				} else {
+					canvas.text(bars.size(), numPosX, numPosY - 8);
+				}
+			}
+			
+			
+			canvas.popStyle();
+		}
+	}
 	
 	class DiffBar {
+		SingleGameJFrame singleGameFrame;
 		Rectangle2D.Float rect = new Rectangle2D.Float();
 		int[] color = new int[3];
 		
@@ -115,16 +197,21 @@ public class WinLostLine_V2 {
 		boolean win = false;
 		int oppoIndex;
 		int scoreDiff;
+		int gameIndex;
+		Database database;
 		
-		public DiffBar (int x, int y, int width, int height) {
+		public DiffBar (int x, int y, int width, int height, int gameIndex, Database database) {
 			rect.x = x;
 			rect.y = y;
 			rect.width = width;
 			rect.height = height;
+			this.gameIndex = gameIndex;
+			this.database = database;
 		}
 		public void setWinLost (boolean win) {
 			this.win = win;
 		}
+		
 		
 		public void setColor (int[] color) {
 			this.color[0] = color[0];
@@ -145,6 +232,12 @@ public class WinLostLine_V2 {
 			if (isMouseHover(canvas)) {
 				canvas.stroke(0);
 				canvas.strokeWeight(2);
+				if (canvas.mousePressed == true) {
+					if (singleGameFrame == null) {
+						singleGameFrame = new SingleGameJFrame(gameIndex, database);
+						System.out.println(gameIndex);
+					}
+				}
 			}
 			canvas.fill(color[0], color[1], color[2]);
 			canvas.rect(rect.x, rect.y, rect.width, rect.height);

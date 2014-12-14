@@ -15,11 +15,11 @@ import datamodel_new.Database;
 import viewmodel.SeasonCanvas;
 
 public class SeasonViewJFrame extends JFrame {
-	final String teamNameFileName = "C:/Users/HXX/Desktop/NBAGameViewer/data/teamNames.csv";
-	final String winLostFileName = "C:/Users/HXX/Desktop/NBAGameViewer/data/winLostMatrix_2013.csv";
-	final String allGameStatFileName = "C:/Users/HXX/Desktop/NBAGameViewer/data/gameScoreList_2013.csv";
-	final String allGameDataFileName = "C:/Users/HXX/Desktop/NBAGameViewer/data/all_game_record_2013.csv";
-	final String efficiencyFile = "C:/Users/HXX/Desktop/NBA_Season_2013/plus-minus";
+	final String teamNameFileName = "data/teamNames.csv";
+	final String winLostFileName = "data/winLostMatrix_2013.csv";
+	final String allGameStatFileName = "data/gameScoreList_2013.csv";
+	final String allGameDataFileName = "data/all_game_record_2013.csv";
+	final String efficiencyFile = "data/plus-minus";
 	
 	SeasonCanvas seasonCanvas;
 	Database database;
@@ -69,8 +69,8 @@ public class SeasonViewJFrame extends JFrame {
 		oppoViewItem = new JMenuItem("Opponent View");
 		timeViewItem = new JMenuItem("Time View");
 		singleGameViewItem = new JMenuItem("Game Flow");
-		viewMenu.add(oppoViewItem);
 		viewMenu.add(timeViewItem);
+		viewMenu.add(oppoViewItem);
 		viewMenu.add(singleGameViewItem);
 				
 		season1314 = new JMenuItem("Season 13-14");
@@ -92,7 +92,7 @@ public class SeasonViewJFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (seasonCanvas != null) {
-					seasonCanvas.displayType = 1;
+					seasonCanvas.displayType = 2;
 				}
 			}
 		});
@@ -103,19 +103,7 @@ public class SeasonViewJFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (seasonCanvas != null) {
-					seasonCanvas.displayType = 2;
-				}
-			}
-			
-		});
-		
-		singleGameViewItem.addActionListener(new ActionListener () {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if (seasonCanvas != null) {
-					seasonCanvas.displayType = 3;
+					seasonCanvas.displayType = 1;
 				}
 			}
 			

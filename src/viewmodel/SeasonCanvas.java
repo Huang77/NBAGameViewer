@@ -41,15 +41,9 @@ public class SeasonCanvas extends PApplet {
 	
 	Database database;
 	// test diff score horizon graph
-	SingleGameView singleGame;
 	OppoView oppoView;
 	TimeView timeView;
-	
-	public void setSingleGameView (int gameIndex, int startX, int startY, int width, int height) {
-		singleGame = new SingleGameView(gameIndex, database);
-		singleGame.setPosition(startX, startY, width, height);
-		singleGame.setup();
-	}
+
 	public void setOppoView (int startX, int startY, int width, int height) {
 		oppoView = new OppoView(database);
 		oppoView.setPosition(startX, startY, width, height);
@@ -94,7 +88,6 @@ public class SeasonCanvas extends PApplet {
     	textFont(font);
     	setOppoView(leftTopX, leftTopY, this.width, this.height);
     	setTimeView(leftTopX, leftTopY, this.width, this.height);
-		setSingleGameView(15, leftTopX, leftTopY, 1200, this.height);
     }
 	
     @Override
@@ -102,17 +95,15 @@ public class SeasonCanvas extends PApplet {
     	background(240);
     	smooth();
     	if (displayType == 1) {
-    		oppoView.draw(this);
-    	} else if (displayType == 2) {
     		timeView.draw(this);
-    	} else if (displayType == 3) {
-    		singleGame.draw(this);
+    	} else if (displayType == 2) {
+    		oppoView.draw(this);
     	}
     }
     
     
     public void mouseMoved () {
-    	if (displayType == 1) {
+    	if (displayType == 2) {
         	if (mouseX > leftTopX && mouseY > leftTopY
         			&& mouseX < leftTopX + database.teamNum * (oppoView.cellSize + oppoView.cellGap)
         			&& mouseY < leftTopY + database.teamNum * (oppoView.cellSize + oppoView.cellGap)) {

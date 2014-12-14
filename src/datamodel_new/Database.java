@@ -276,6 +276,8 @@ public class Database {
 				
 			GameStatData tempStatData;
 			
+			int scoreDiff = 0;
+			
 			while ((line = br.readLine()) != null) {
 				array = line.split(",");
 				if (array[8].equals("start") || array[8].endsWith("end")) continue;
@@ -287,7 +289,10 @@ public class Database {
 				curLeftScore = Integer.parseInt(array[4]);
 				curRightScore = Integer.parseInt(array[5]);
 				
-				
+				scoreDiff = Math.abs(curLeftScore - curRightScore);
+				if (tempStatData.maxScoreDiff < scoreDiff) {
+					tempStatData.maxScoreDiff = scoreDiff;
+				}
 				
 				//System.out.println(gameIndex + " : " + timeIndex);
 				

@@ -34,7 +34,7 @@ public class ScoreEventCircleLine {
 		}
 	}
 	
-	public void draw (SeasonCanvas canvas) {
+	public void draw (SingleGameCanvas canvas) {
 		// draw bars
 		for (int i = 0; i < bars.size(); i++) {
 			bars.get(i).draw(canvas);

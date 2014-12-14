@@ -16,8 +16,6 @@ import datamodel_new.TeamSortByOverall;
 import datamodel_new.TeamSortType;
 
 public class TimeView {
-
-	
 	
 	int leftTopX, leftTopY;
 	int circleMarginX = 0, circleMarginY = 0;

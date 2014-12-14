@@ -23,7 +23,7 @@ public class ShootCircleConnectBar {
 		this.color[1] = g;
 		this.color[2] = b;
 	}
-	public void draw (SeasonCanvas canvas) {
+	public void draw (SingleGameCanvas canvas) {
 		canvas.pushStyle();
 		canvas.noStroke();
 		canvas.fill(color[0], color[1], color[2]);
@@ -31,7 +31,7 @@ public class ShootCircleConnectBar {
 		canvas.popStyle();
 	}
 	
-	public boolean isMouseHover (SeasonCanvas canvas) {
+	public boolean isMouseHover (SingleGameCanvas canvas) {
 		if (rect.contains(canvas.mouseX, canvas.mouseY)) {
 			return true;
 		} else {

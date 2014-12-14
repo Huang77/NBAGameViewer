@@ -39,7 +39,7 @@ public class SingleGameView {
 	
 	public void setup () {
 		int startX = x;
-		int startY = y + 200;
+		int startY = (height) / 2;
 		
 		int leftCircleY = startY - 10;
 		int rightCircleY = startY + 150 + 10;
@@ -155,7 +155,7 @@ public class SingleGameView {
 	
 	
 	
-	public void draw (SeasonCanvas canvas) {
+	public void draw (SingleGameCanvas canvas) {
 		diffGraph.draw(canvas);
 		for (int i = 0; i < leftCircleLines.size(); i++) {
 			leftCircleLines.get(i).draw(canvas);

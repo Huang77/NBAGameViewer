@@ -12,6 +12,7 @@ public class GameStatData {
 	public int leftScore;
 	public int rightScore;
 	public boolean overtime = false;
+	public int maxScoreDiff = -Integer.MAX_VALUE;
 	
 	ArrayList<Event> eventList = new ArrayList<Event>();
 	ArrayList<PlayerGameStat> leftPlayers = new ArrayList<PlayerGameStat>();
@@ -37,5 +38,8 @@ public class GameStatData {
 	}
 	public ArrayList<PlayerGameStat> getRightPlayers () {
 		return rightPlayers;
+	}
+	public int getMaxScoreDiff () {
+		return maxScoreDiff;
 	}
 }

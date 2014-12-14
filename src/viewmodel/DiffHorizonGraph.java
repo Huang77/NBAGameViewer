@@ -81,6 +81,7 @@ public class DiffHorizonGraph {
 		insideRectList.add(upRect);
 		insideRectList.add(downRect);
 	}
+	
 	public void addInsideRectList_LineMode (int scoreDiff, int x, int width) {
 		lineMode = true;
 		int baseLine = (int) (backgroundRect.y + backgroundRect.height / 2);
@@ -88,9 +89,10 @@ public class DiffHorizonGraph {
 		boolean scorePositive = scoreDiff >= 0 ? true : false;
 		scoreDiff = scorePositive ? scoreDiff : -scoreDiff;
 		
-		float rectHeight = scoreDiff >= 30? 0 : barHeight * scoreDiff / 25;
-		int rectY = (int) (scorePositive ? baseLine - rectHeight : baseLine);
-		InsideRect rect = new InsideRect(x, rectY, width, (int)rectHeight);
+		//float rectHeight = scoreDiff >= 30? barHeight : barHeight * scoreDiff / 30.0f;
+		float rectHeight = PApplet.map(scoreDiff, 0, database.gameMap.get(gameIndex).getMaxScoreDiff() + 3, 0, barHeight);
+		float rectY = (int) (scorePositive ? baseLine - rectHeight : baseLine);
+		InsideRect rect = new InsideRect(x, rectY, width, rectHeight);
 		if (scorePositive) {
 			rect.setColor(colorPos[3 * 5], colorPos[3 * 5 + 1], colorPos[3 * 5 + 2]);
 		} else {
@@ -100,7 +102,7 @@ public class DiffHorizonGraph {
 		
 	}
 
-	public void draw (SeasonCanvas canvas) {
+	public void draw (SingleGameCanvas canvas) {
 		for (int i = 0; i < insideRectList.size(); i++) {
 			insideRectList.get(i).draw(canvas);
 		}
@@ -132,7 +134,7 @@ public class DiffHorizonGraph {
 		Rectangle2D.Float rect = new Rectangle.Float();
 		int[] color = new int[3];
 		
-		public InsideRect (int x, int y, int width, int height) {
+		public InsideRect (float x, float y, float width, float height) {
 			rect.x = x;
 			rect.y = y;
 			rect.width = width;
@@ -150,10 +152,9 @@ public class DiffHorizonGraph {
 			this.color[2] = b;
 		}
 		
-		public void draw (SeasonCanvas canvas) {
+		public void draw (SingleGameCanvas canvas) {
 
 			canvas.pushStyle();
-			
 			canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
 			canvas.fill(80);
 			canvas.textSize(20);
@@ -165,5 +166,6 @@ public class DiffHorizonGraph {
 			canvas.rect(rect.x, rect.y, rect.width, rect.height);
 			canvas.popStyle();
 		}
+		
 	}
 }

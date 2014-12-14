@@ -52,7 +52,7 @@ public class PlayerBar {
 			lastX += width;
 		}
 	}
-	public void draw (SeasonCanvas canvas) {
+	public void draw (SingleGameCanvas canvas) {
 		hover = false;
 		for (int i = 0; i < rectList.size(); i++) {
 			rectList.get(i).draw(canvas);
@@ -85,7 +85,7 @@ public class PlayerBar {
 			rect.width = width;
 			rect.height = height;
 		}
-		public void draw (SeasonCanvas canvas) {
+		public void draw (SingleGameCanvas canvas) {
 			canvas.pushStyle();
 			canvas.stroke(250);
 			if (isMouseHover(canvas)) {
@@ -96,7 +96,7 @@ public class PlayerBar {
 			canvas.popStyle();
 		}
 		
-		public boolean isMouseHover (SeasonCanvas canvas) {
+		public boolean isMouseHover (SingleGameCanvas canvas) {
 			if (value == 999) {
 				return false;
 			}

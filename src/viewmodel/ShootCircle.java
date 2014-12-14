@@ -31,7 +31,7 @@ public class ShootCircle {
 		circle.y = y;
 	}
 	
-	public void draw (SeasonCanvas canvas) {
+	public void draw (SingleGameCanvas canvas) {
 		canvas.pushStyle();
 		canvas.noStroke();
 		if (isMouseHover(canvas)) {
@@ -47,7 +47,7 @@ public class ShootCircle {
 		canvas.popStyle();
 	}
 	
-	public boolean isMouseHover (SeasonCanvas canvas) {
+	public boolean isMouseHover (SingleGameCanvas canvas) {
 		if (circle.contains(canvas.mouseX, canvas.mouseY)) {
 			System.out.println("in");
 			return true;
