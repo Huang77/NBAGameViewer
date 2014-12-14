@@ -29,7 +29,7 @@ public class PlayerBar {
 	public void setInsideBar () {
 		Efficiency tempEff;
 		float lastX = background.x;
-		int width;
+		float width;
 		int[] color;
 		int value;
 		for (int i = 0; i < pgs.getEffList().size(); i++) {

@@ -84,19 +84,27 @@ public class DiffHorizonGraph {
 	
 	public void addInsideRectList_LineMode (int scoreDiff, int x, int width) {
 		lineMode = true;
-		int baseLine = (int) (backgroundRect.y + backgroundRect.height / 2);
+		int baseLineY = (int) (backgroundRect.y + backgroundRect.height / 2);
 		float barHeight = backgroundRect.height / 2;
 		boolean scorePositive = scoreDiff >= 0 ? true : false;
 		scoreDiff = scorePositive ? scoreDiff : -scoreDiff;
 		
 		//float rectHeight = scoreDiff >= 30? barHeight : barHeight * scoreDiff / 30.0f;
 		float rectHeight = PApplet.map(scoreDiff, 0, database.gameMap.get(gameIndex).getMaxScoreDiff() + 3, 0, barHeight);
-		float rectY = (int) (scorePositive ? baseLine - rectHeight : baseLine);
-		InsideRect rect = new InsideRect(x, rectY, width, rectHeight);
+		InsideRect rect = null;
 		if (scorePositive) {
-			rect.setColor(colorPos[3 * 5], colorPos[3 * 5 + 1], colorPos[3 * 5 + 2]);
+			rect = new InsideRect(x, baseLineY - rectHeight, x + width, baseLineY);
 		} else {
-			rect.setColor(colorNeg[3 * 5], colorNeg[3 * 5 + 1], colorNeg[3 * 5 + 2]);
+			rect = new InsideRect(x, baseLineY, x + width, baseLineY + rectHeight);
+		}
+		
+	
+		if (scorePositive) {
+			rect.setColor(colorPos[3 * 3], colorPos[3 * 3 + 1], colorPos[3 * 3 + 2]);
+			rect.setScoreDiff(scoreDiff);
+		} else {
+			rect.setColor(colorNeg[3 * 3], colorNeg[3 * 3 + 1], colorNeg[3 * 3 + 2]);
+			rect.setScoreDiff(-scoreDiff);
 		}
 		insideRectList.add(rect);
 		
@@ -106,9 +114,58 @@ public class DiffHorizonGraph {
 		for (int i = 0; i < insideRectList.size(); i++) {
 			insideRectList.get(i).draw(canvas);
 		}
+		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+		canvas.fill(80);
+		canvas.textSize(20);
+		// draw team name
+		canvas.text(leftTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 - 40);
+		canvas.text(rightTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 + 30);
+		// draw max score diff
+		canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
+		canvas.textSize(14);
+		canvas.text(database.gameMap.get(gameIndex).maxLeftDiff, backgroundRect.x + 5, backgroundRect.y + 10);
+		canvas.text(database.gameMap.get(gameIndex).maxRightDiff, backgroundRect.x + 5, backgroundRect.y + backgroundRect.height - 10);
+		// draw final score
+		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+		canvas.text(database.gameMap.get(gameIndex).leftScore, backgroundRect.x + backgroundRect.width - 5, backgroundRect.y + 10);
+		canvas.text(database.gameMap.get(gameIndex).rightScore, backgroundRect.x + backgroundRect.width - 5, backgroundRect.y + backgroundRect.height - 10);
+		
+
+		canvas.pushStyle();
+		canvas.strokeWeight(1.5f);
+		canvas.stroke(150);
+		canvas.strokeJoin(PApplet.ROUND);
+		
+		canvas.line(backgroundRect.x, backgroundRect.y + 10, backgroundRect.x, backgroundRect.y + backgroundRect.height - 10);
+		canvas.line(backgroundRect.x + backgroundRect.width - 2, backgroundRect.y + 10, backgroundRect.x + backgroundRect.width - 2, backgroundRect.y + backgroundRect.height - 10);
+		
+		
+		float y, lastY = (backgroundRect.y + backgroundRect.height / 2);
+		if (insideRectList.get(0).scoreDiff >= 0) {
+			y = insideRectList.get(0).rect.y;
+		} else {
+			y = insideRectList.get(0).rect.y + insideRectList.get(0).rect.height;
+		}
+		canvas.line(backgroundRect.x, lastY, backgroundRect.x, y);
+		canvas.line(backgroundRect.x, y, backgroundRect.x + insideRectList.get(0).rect.width, y);
+		lastY = y;
+		
+		for (int i = 1; i < insideRectList.size(); i++) {
+			if (insideRectList.get(i).scoreDiff >= 0) {
+				y = insideRectList.get(i).rect.y;
+			} else {
+				y = insideRectList.get(i).rect.y + insideRectList.get(i).rect.height;
+			}
+			canvas.line(insideRectList.get(i).rect.x, lastY, insideRectList.get(i).rect.x, y);
+			canvas.line(insideRectList.get(i).rect.x, y, insideRectList.get(i).rect.x + insideRectList.get(i).rect.width, y);
+			lastY = y;
+		}
+		canvas.popStyle();
+		
+		
 		canvas.pushStyle();
 		canvas.strokeWeight(1);
-		canvas.stroke(0);
+		canvas.stroke(150);
 		canvas.noFill();
 		//canvas.rect(backgroundRect.x, backgroundRect.y, backgroundRect.width, backgroundRect.height);
 		if (lineMode) {
@@ -133,12 +190,13 @@ public class DiffHorizonGraph {
 	public class InsideRect {
 		Rectangle2D.Float rect = new Rectangle.Float();
 		int[] color = new int[3];
+		int scoreDiff;
 		
-		public InsideRect (float x, float y, float width, float height) {
-			rect.x = x;
-			rect.y = y;
-			rect.width = width;
-			rect.height = height;
+		public InsideRect (float x1, float y1, float x2, float y2) {
+			rect.x = x1;
+			rect.y = y1;
+			rect.width = x2 - x1;
+			rect.height = y2 - y1;
 		}
 		
 		public void setColor (int[] color) {
@@ -151,15 +209,14 @@ public class DiffHorizonGraph {
 			this.color[1] = g;
 			this.color[2] = b;
 		}
+		public void setScoreDiff (int score) {
+			scoreDiff = score;
+		}
 		
 		public void draw (SingleGameCanvas canvas) {
 
 			canvas.pushStyle();
-			canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
-			canvas.fill(80);
-			canvas.textSize(20);
-			canvas.text(leftTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 - 20);
-			canvas.text(rightTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 + 10);
+
 			
 			canvas.fill(this.color[0], this.color[1], this.color[2]);
 			canvas.noStroke();

@@ -289,10 +289,17 @@ public class Database {
 				curLeftScore = Integer.parseInt(array[4]);
 				curRightScore = Integer.parseInt(array[5]);
 				
-				scoreDiff = Math.abs(curLeftScore - curRightScore);
-				if (tempStatData.maxScoreDiff < scoreDiff) {
-					tempStatData.maxScoreDiff = scoreDiff;
+				scoreDiff = curLeftScore - curRightScore;
+				if (scoreDiff >= 0) {
+					if (tempStatData.maxLeftDiff < scoreDiff) {
+						tempStatData.maxLeftDiff = scoreDiff;
+					}
+				} else {
+					if (tempStatData.maxRightDiff < -scoreDiff) {
+						tempStatData.maxRightDiff = -scoreDiff;
+					}
 				}
+
 				
 				//System.out.println(gameIndex + " : " + timeIndex);
 				

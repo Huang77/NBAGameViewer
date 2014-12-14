@@ -16,6 +16,9 @@ public class SingleGameView {
 	
 	int x, y, width, height;
 	
+	int diffGraphHeight = 150;
+	int playerBarHeight = 12, playerBarGap = 5;
+	
 	
 	public DiffHorizonGraph diffGraph;
 	public ArrayList<ScoreEventCircleLine> leftCircleLines = new ArrayList<ScoreEventCircleLine>();
@@ -39,16 +42,16 @@ public class SingleGameView {
 	
 	public void setup () {
 		int startX = x;
-		int startY = (height) / 2;
+		int startY = (height) / 2 - 200;   // y position of DiffHorizonGraph
 		
 		int leftCircleY = startY - 10;
-		int rightCircleY = startY + 150 + 10;
+		int rightCircleY = startY + diffGraphHeight + 10;
 		ArrayList<Event> eventList = database.gameStatDataList.get(gameIndex).getEventList();
 		int maxQuarter = eventList.get(eventList.size() - 1).getQuarter();
 		
 		// set diff graph
 		this.diffGraph = new DiffHorizonGraph(gameIndex, database, maxQuarter);
-		this.diffGraph.setup(startX, startY, width, 150);
+		this.diffGraph.setup(startX, startY, width, diffGraphHeight);
 				
 		
 		Event event;
@@ -135,18 +138,17 @@ public class SingleGameView {
 		}
 		
 		// set player bar
-		int playerBarHeight = 12, gap = 5;
-		int x = startX, y = this.y;
+		int x = startX, y = leftCircleY - 50;
 		ArrayList<PlayerGameStat> leftPlayers = database.gameStatDataList.get(gameIndex).getLeftPlayers();
 		for (int i = 0; i < leftPlayers.size(); i++) {
-			PlayerBar curBar = new PlayerBar(leftPlayers.get(i), startX, y + i * (playerBarHeight + gap), width, playerBarHeight);
+			PlayerBar curBar = new PlayerBar(leftPlayers.get(i), startX, y - i * (playerBarHeight + playerBarGap), width, playerBarHeight);
 			curBar.setInsideBar();
 			leftPlayerBar.add(curBar);
 		}
 		y = rightCircleY + 50;
 		ArrayList<PlayerGameStat> rightPlayers = database.gameStatDataList.get(gameIndex).getRightPlayers();
 		for (int i = 0; i < rightPlayers.size(); i++) {
-			PlayerBar curBar = new PlayerBar(rightPlayers.get(i), startX, y + i * (playerBarHeight + gap), width, playerBarHeight);
+			PlayerBar curBar = new PlayerBar(rightPlayers.get(i), startX, y + i * (playerBarHeight + playerBarGap), width, playerBarHeight);
 			curBar.setInsideBar();
 			leftPlayerBar.add(curBar);
 		}
