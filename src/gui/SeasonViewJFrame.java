@@ -42,7 +42,7 @@ public class SeasonViewJFrame extends JFrame {
 	JMenuItem singleGameViewItem;
 	
 	
-	int winWidth = 1440, winHeight = 1000;
+	int winWidth = 1600, winHeight = 1000;
 	int seasonCanvasWidth = winWidth, seasonCanvasHeight = winHeight;
 	
 	public SeasonViewJFrame () {

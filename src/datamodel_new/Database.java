@@ -73,7 +73,7 @@ public class Database {
 			for (int i = 0; i < teamNum; i++) {
 				line = br.readLine();
 				array = line.split(",");
-				teams[i].fg = Float.parseFloat(array[4]);
+				teams[i].fg = Float.parseFloat(array[4]) / 82;
 				if (maxfg < teams[i].fg) {
 					maxfg = teams[i].fg;
 				}
@@ -81,7 +81,7 @@ public class Database {
 					minfg = teams[i].fg;
 				}
 			
-				teams[i].fga = Float.parseFloat(array[5]);
+				teams[i].fga = Float.parseFloat(array[5]) / 82;
 				if (maxfga < teams[i].fga) {
 					maxfga = teams[i].fga;
 				}
@@ -97,7 +97,7 @@ public class Database {
 					minfgp = teams[i].fgp;
 				}
 			
-				teams[i]._3p = Float.parseFloat(array[7]);
+				teams[i]._3p = Float.parseFloat(array[7])/ 82;
 				if (max_3p < teams[i]._3p) {
 					max_3p = teams[i]._3p;
 				}
@@ -105,7 +105,7 @@ public class Database {
 					min_3p = teams[i]._3p;
 				}
 			
-				teams[i]._3pa = Float.parseFloat(array[8]);
+				teams[i]._3pa = Float.parseFloat(array[8])/ 82;
 				if (max_3pa < teams[i]._3pa) {
 					max_3pa = teams[i]._3pa;
 				}
@@ -121,7 +121,7 @@ public class Database {
 					min_3pp = teams[i]._3pp;
 				}
 			
-				teams[i]._2p = Float.parseFloat(array[10]);
+				teams[i]._2p = Float.parseFloat(array[10])/ 82;
 				if (max_2p < teams[i]._2p) {
 					max_2p = teams[i]._2p;
 				}
@@ -129,7 +129,7 @@ public class Database {
 					min_2p = teams[i]._2p;
 				}
 			
-				teams[i]._2pa = Float.parseFloat(array[11]);
+				teams[i]._2pa = Float.parseFloat(array[11])/ 82;
 				if (max_2pa < teams[i]._2pa) {
 					max_2pa = teams[i]._2pa;
 				}
@@ -145,7 +145,7 @@ public class Database {
 					min_2pp = teams[i]._2pp;
 				}
 			
-				teams[i].ft = Float.parseFloat(array[13]);
+				teams[i].ft = Float.parseFloat(array[13])/ 82;
 				if (maxft < teams[i].ft) {
 					maxft = teams[i].ft;
 				}
@@ -153,7 +153,7 @@ public class Database {
 					minft = teams[i].ft;
 				}
 			
-				teams[i].fta = Float.parseFloat(array[14]);
+				teams[i].fta = Float.parseFloat(array[14])/ 82;
 				if (maxfta < teams[i].fta) {
 					maxfta = teams[i].fta;
 				}
@@ -169,7 +169,7 @@ public class Database {
 					minftp = teams[i].ftp;
 				}
 			
-				teams[i].orb = Float.parseFloat(array[16]);
+				teams[i].orb = Float.parseFloat(array[16])/ 82;
 				if (maxorb < teams[i].orb) {
 					maxorb = teams[i].orb;
 				}
@@ -177,7 +177,7 @@ public class Database {
 					minorb = teams[i].orb;
 				}
 			
-				teams[i].drb = Float.parseFloat(array[17]);
+				teams[i].drb = Float.parseFloat(array[17])/ 82;
 				if (maxdrb < teams[i].drb) {
 					maxdrb = teams[i].drb;
 				}
@@ -185,7 +185,7 @@ public class Database {
 					mindrb = teams[i].drb;
 				}
 			
-				teams[i].trb = Float.parseFloat(array[18]);
+				teams[i].trb = Float.parseFloat(array[18])/ 82;
 				if (maxtrb < teams[i].trb) {
 					maxtrb = teams[i].trb;
 				}
@@ -193,7 +193,7 @@ public class Database {
 					mintrb = teams[i].trb;
 				}
 			
-				teams[i].ast = Float.parseFloat(array[19]);
+				teams[i].ast = Float.parseFloat(array[19])/ 82;
 				if (maxast < teams[i].ast) {
 					maxast = teams[i].ast;
 				}
@@ -201,7 +201,7 @@ public class Database {
 					minast = teams[i].ast;
 				}
 			
-				teams[i].stl = Float.parseFloat(array[20]);
+				teams[i].stl = Float.parseFloat(array[20])/ 82;
 				if (maxstl < teams[i].stl) {
 					maxstl = teams[i].stl;
 				}
@@ -209,7 +209,7 @@ public class Database {
 					minstl = teams[i].stl;
 				}
 			
-				teams[i].blk = Float.parseFloat(array[21]);
+				teams[i].blk = Float.parseFloat(array[21])/ 82;
 				if (maxblk < teams[i].blk) {
 					maxblk = teams[i].blk;
 				}
@@ -217,7 +217,7 @@ public class Database {
 					minblk = teams[i].blk;
 				}
 			
-				teams[i].tov = Float.parseFloat(array[22]);
+				teams[i].tov = Float.parseFloat(array[22])/ 82;
 				if (maxtov < teams[i].tov) {
 					maxtov = teams[i].tov;
 				}
@@ -225,7 +225,7 @@ public class Database {
 					mintov = teams[i].tov;
 				}
 			
-				teams[i].pf = Float.parseFloat(array[23]);
+				teams[i].pf = Float.parseFloat(array[23])/ 82;
 				if (maxpf < teams[i].pf) {
 					maxpf = teams[i].pf;
 				}
@@ -282,7 +282,7 @@ public class Database {
 			for (int i = 0; i < teamNum; i++) {
 				line = br.readLine();
 				array = line.split(",");
-				teams[i].opfg = Float.parseFloat(array[4]);
+				teams[i].opfg = Float.parseFloat(array[4])/ 82;
 				if (maxfg > teams[i].opfg) {
 					maxfg = teams[i].opfg;
 				}
@@ -290,7 +290,7 @@ public class Database {
 					minfg = teams[i].opfg;
 				}
 				
-				teams[i].opfga = Float.parseFloat(array[5]);
+				teams[i].opfga = Float.parseFloat(array[5])/ 82;
 				if (maxfga < teams[i].opfga) {
 					maxfga = teams[i].opfga;
 				}
@@ -305,7 +305,7 @@ public class Database {
 					minfgp = teams[i].opfgp;
 				}
 			
-				teams[i].op_3p = Float.parseFloat(array[7]);
+				teams[i].op_3p = Float.parseFloat(array[7])/ 82;
 				if (max_3p < teams[i].op_3p) {
 					max_3p = teams[i].op_3p;
 				}
@@ -313,7 +313,7 @@ public class Database {
 					min_3p = teams[i].op_3p;
 				}
 			
-				teams[i].op_3pa = Float.parseFloat(array[8]);
+				teams[i].op_3pa = Float.parseFloat(array[8])/ 82;
 				if (max_3pa < teams[i].op_3pa) {
 					max_3pa = teams[i].op_3pa;
 				}
@@ -328,14 +328,14 @@ public class Database {
 				if (min_3pp > teams[i].op_3pp) {
 					min_3pp = teams[i].op_3pp;
 				}
-				teams[i].op_2p = Float.parseFloat(array[10]);
+				teams[i].op_2p = Float.parseFloat(array[10])/ 82;
 				if (max_2p < teams[i].op_2p) {
 					max_2p = teams[i].op_2p;
 				}
 				if (min_2p > teams[i].op_2p) {
 					min_2p = teams[i].op_2p;
 				}
-				teams[i].op_2pa = Float.parseFloat(array[11]);
+				teams[i].op_2pa = Float.parseFloat(array[11])/ 82;
 				if (max_2pa < teams[i].op_2pa) {
 					max_2pa = teams[i].op_2pa;
 				}
@@ -350,7 +350,7 @@ public class Database {
 				if (min_2pp > teams[i].op_2pp) {
 					min_2pp = teams[i].op_2pp;
 				}
-				teams[i].opft = Float.parseFloat(array[13]);
+				teams[i].opft = Float.parseFloat(array[13])/ 82;
 				if (maxft < teams[i].opft) {
 					maxft = teams[i].opft;
 				}
@@ -358,7 +358,7 @@ public class Database {
 					minft = teams[i].opft;
 				}
 			
-				teams[i].opfta = Float.parseFloat(array[14]);
+				teams[i].opfta = Float.parseFloat(array[14])/ 82;
 				if (maxfta < teams[i].opfta) {
 					maxfta = teams[i].opfta;
 				}
@@ -372,56 +372,56 @@ public class Database {
 				if (minftp > teams[i].opftp) {
 					minftp = teams[i].opftp;
 				}
-				teams[i].oporb = Float.parseFloat(array[16]);
+				teams[i].oporb = Float.parseFloat(array[16])/ 82;
 				if (maxorb < teams[i].oporb) {
 					maxorb = teams[i].oporb;
 				}
 				if (minorb > teams[i].oporb) {
 					minorb = teams[i].oporb;
 				}
-				teams[i].opdrb = Float.parseFloat(array[17]);
+				teams[i].opdrb = Float.parseFloat(array[17])/ 82;
 				if (maxdrb < teams[i].opdrb) {
 					maxdrb = teams[i].opdrb;
 				}
 				if (mindrb > teams[i].opdrb) {
 					mindrb = teams[i].opdrb;
 				}
-				teams[i].optrb = Float.parseFloat(array[18]);
+				teams[i].optrb = Float.parseFloat(array[18])/ 82;
 				if (maxtrb < teams[i].optrb) {
 					maxtrb = teams[i].optrb;
 				}
 				if (mintrb > teams[i].optrb) {
 					mintrb = teams[i].optrb;
 				}
-				teams[i].opast = Float.parseFloat(array[19]);
+				teams[i].opast = Float.parseFloat(array[19])/ 82;
 				if (maxast < teams[i].opast) {
 					maxast = teams[i].opast;
 				}
 				if (minast > teams[i].opast) {
 					minast = teams[i].opast;
 				}
-				teams[i].opstl = Float.parseFloat(array[20]);
+				teams[i].opstl = Float.parseFloat(array[20])/ 82;
 				if (maxstl < teams[i].opstl) {
 					maxstl = teams[i].opstl;
 				}
 				if (minstl > teams[i].opstl) {
 					minstl = teams[i].opstl;
 				}
-				teams[i].opblk = Float.parseFloat(array[21]);
+				teams[i].opblk = Float.parseFloat(array[21])/ 82;
 				if (maxblk < teams[i].opblk) {
 					maxblk = teams[i].opblk;
 				}
 				if (minblk > teams[i].opblk) {
 					minblk = teams[i].opblk;
 				}
-				teams[i].optov = Float.parseFloat(array[22]);
+				teams[i].optov = Float.parseFloat(array[22])/ 82;
 				if (maxtov < teams[i].optov) {
 					maxtov = teams[i].optov;
 				}
 				if (mintov > teams[i].optov) {
 					mintov = teams[i].optov;
 				}
-				teams[i].oppf = Float.parseFloat(array[23]);
+				teams[i].oppf = Float.parseFloat(array[23])/ 82;
 				if (maxpf < teams[i].oppf) {
 					maxpf = teams[i].oppf;
 				}

@@ -23,6 +23,7 @@ public class TimeView {
 	int width, height;
 	
 	int attrBarStartX = 800;
+	int attrGap = 115;
 	
 	Database database;
 	int[] verticalOrder;  // vertical order of the teams 
@@ -67,27 +68,27 @@ public class TimeView {
 	}
 	public void setPointsAttrRect (int teamIndex) {
 		AttributeRect rect = new AttributeRect(database, teamIndex, "pts", database.teamsMap.get(teamIndex).pts, database.teamsMap.get(teamIndex).oppts);
-		rect.setPosition(leftTopX + attrBarStartX + 80 , leftTopY + this.verticalOrder[teamIndex] * (teamGap) + 10);
+		rect.setPosition(leftTopX + attrBarStartX + attrGap , leftTopY + this.verticalOrder[teamIndex] * (teamGap) + 10);
 		pointsAttrMap.put(teamIndex, rect);
 	}
 	public void setReboundAttrRect (int teamIndex) {
 		AttributeRect rect = new AttributeRect(database, teamIndex, "trb", database.teamsMap.get(teamIndex).trb, database.teamsMap.get(teamIndex).optrb);
-		rect.setPosition(leftTopX + attrBarStartX + 2 * 80, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
+		rect.setPosition(leftTopX + attrBarStartX + 2 * attrGap, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
 		reboundAttrMap.put(teamIndex, rect);
 	}
 	public void setAssistAttrRect (int teamIndex) {
 		AttributeRect rect = new AttributeRect(database, teamIndex, "ast", database.teamsMap.get(teamIndex).ast, database.teamsMap.get(teamIndex).ast);
-		rect.setPosition(leftTopX + attrBarStartX + 3 * 80, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
+		rect.setPosition(leftTopX + attrBarStartX + 3 * attrGap, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
 		assistAttrMap.put(teamIndex, rect);
 	}
 	public void setTurnoverAttrRect (int teamIndex) {
 		AttributeRect rect = new AttributeRect(database, teamIndex, "tov", database.teamsMap.get(teamIndex).tov, database.teamsMap.get(teamIndex).optov);
-		rect.setPosition(leftTopX + attrBarStartX + 4 * 80, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
+		rect.setPosition(leftTopX + attrBarStartX + 4 * attrGap, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
 		turnoverAttrMap.put(teamIndex, rect);
 	}
 	public void setBlockAttrRect (int teamIndex) {
 		AttributeRect rect = new AttributeRect(database, teamIndex, "blk", database.teamsMap.get(teamIndex).blk, database.teamsMap.get(teamIndex).opblk);
-		rect.setPosition(leftTopX + attrBarStartX + 5 * 80, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
+		rect.setPosition(leftTopX + attrBarStartX + 5 * attrGap, leftTopY + this.verticalOrder[teamIndex] * (teamGap)+ 10);
 		blockAttrMap.put(teamIndex, rect);
 	}
 	
@@ -96,11 +97,11 @@ public class TimeView {
 		canvas.textAlign(PApplet.CENTER, PApplet.BOTTOM);
 		canvas.fill(80);
 		canvas.textSize(15);
-		canvas.text("Points", leftTopX + attrBarStartX + 80 , leftTopY);
-		canvas.text("Rebounds", leftTopX + attrBarStartX + 2 * 80, leftTopY);
-		canvas.text("Assists", leftTopX + attrBarStartX + 3 * 80, leftTopY);
-		canvas.text("Turnovers", leftTopX + attrBarStartX + 4 * 80, leftTopY);
-		canvas.text("Blocks", leftTopX + attrBarStartX + 5 * 80, leftTopY);
+		canvas.text("Points", leftTopX + attrBarStartX + attrGap , leftTopY);
+		canvas.text("Rebounds", leftTopX + attrBarStartX + 2 * attrGap, leftTopY);
+		canvas.text("Assists", leftTopX + attrBarStartX + 3 * attrGap, leftTopY);
+		canvas.text("Turnovers", leftTopX + attrBarStartX + 4 * attrGap, leftTopY);
+		canvas.text("Blocks", leftTopX + attrBarStartX + 5 * attrGap, leftTopY);
 		canvas.popStyle();
 	}
 	

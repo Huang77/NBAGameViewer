@@ -7,6 +7,7 @@ import datamodel_new.Database;
 import processing.core.PApplet;
 
 public class AttributeRect {
+	static java.text.DecimalFormat df = new java.text.DecimalFormat("#.0");  
 	static final int[] colorLeft = {239,138,98};
 	static final int[] colorRight = {103,169,207};
 	
@@ -69,7 +70,7 @@ public class AttributeRect {
 			maxValue = database.maxblk;
 			minValue = database.minblk;
 		}
-		return PApplet.map(value, maxValue, minValue, minWidth, maxWidth);
+		return PApplet.map(value, minValue, maxValue, minWidth, maxWidth);
 	}
 	
 	public void draw (SeasonCanvas canvas) {
@@ -81,6 +82,13 @@ public class AttributeRect {
 		canvas.rect(leftRect.x, leftRect.y, leftRect.width, leftRect.height);
 		canvas.fill(colorRight[0], colorRight[1], colorRight[2], 50);
 		canvas.rect(rightRect.x, rightRect.y, rightRect.width, rightRect.height);
+		
+		canvas.textSize(12);
+		canvas.fill(180);
+		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+		canvas.text(df.format(value), leftRect.x, leftRect.y + leftRect.height / 2);
+		canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
+		canvas.text(df.format(oValue), rightRect.x + rightRect.width , rightRect.y + rightRect.height / 2);
 		canvas.popStyle();
 	}
 }
