@@ -113,7 +113,7 @@ public class SeasonCanvas extends PApplet {
         		oppoView.leftHoverTextIndex = -1;
         		oppoView.topHoverTextIndex = -1;
         	}
-    	}
+    	} 
 
     }
 }

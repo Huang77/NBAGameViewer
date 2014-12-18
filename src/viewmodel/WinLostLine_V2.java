@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 
 
+
 import javax.swing.JFrame;
 
 import processing.core.PApplet;
@@ -31,23 +32,37 @@ public class WinLostLine_V2 {
 	
 	static final int numOfGame = 82;
 	
+	static final int leftTeamBarWidth = 120;
+	
 	Database database;
 	int teamIndex;
 	boolean hover = false;
 	
-	
+	LeftTeamBar leftTeamBar;
 	ArrayList<WinLostStreak> streaks = new ArrayList<WinLostStreak>();  
 	int startX, startY;
 	
 	public WinLostLine_V2 (int teamIndex, Database database) {
 		this.teamIndex = teamIndex;
 		this.database = database;
+		this.leftTeamBar = new LeftTeamBar(teamIndex);
 	}
 	
 	public void setPosition (int x, int y) {
 		startX = x;
 		startY = y;
 		setStreaks();
+		setupLeftTeamBar();
+	}
+	
+	public void setupLeftTeamBar () {
+		int frontWidth;
+		Team tempTeam = database.teamsMap.get(teamIndex);;
+		int[] tempWinLost;
+		tempWinLost = tempTeam.getOverall();
+		this.leftTeamBar.setBackgroundRectSize(startX - 10 - leftTeamBarWidth, startY + barHeight / 2, leftTeamBarWidth, 20);
+		frontWidth = (int) PApplet.map(tempWinLost[0], 0, tempWinLost[0] + tempWinLost[1], 0, leftTeamBarWidth);
+		this.leftTeamBar.setFrontRectSize(startX - 10 - leftTeamBarWidth, startY + barHeight / 2, frontWidth, 20);
 	}
 	
 	public void setStreaks () {
@@ -128,7 +143,8 @@ public class WinLostLine_V2 {
 				hover = true;
 			}
 		}
-		drawTeamName(canvas);
+		//drawTeamName(canvas);
+		leftTeamBar.draw(canvas, hover);
 		canvas.popStyle();
 	}
 	

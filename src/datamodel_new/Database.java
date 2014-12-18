@@ -20,6 +20,22 @@ public class Database {
 	public int maxScoreDiff = Integer.MIN_VALUE;
 	public int minScoreDiff = Integer.MAX_VALUE;
 	
+	float maxfg = -Float.MAX_VALUE, maxfga = -Float.MAX_VALUE, maxfgp = -Float.MAX_VALUE;
+	float max_3p = -Float.MAX_VALUE, max_3pa = -Float.MAX_VALUE, max_3pp = -Float.MAX_VALUE;
+	float max_2p = -Float.MAX_VALUE, max_2pa = -Float.MAX_VALUE, max_2pp = -Float.MAX_VALUE;
+	float maxft= -Float.MAX_VALUE, maxfta= -Float.MAX_VALUE, maxftp;
+	float maxorb= -Float.MAX_VALUE, maxdrb= -Float.MAX_VALUE, maxtrb= -Float.MAX_VALUE;
+	float maxast= -Float.MAX_VALUE, maxstl= -Float.MAX_VALUE, maxblk= -Float.MAX_VALUE, maxtov= -Float.MAX_VALUE, maxpf= -Float.MAX_VALUE;
+	float maxpts= -Float.MAX_VALUE;
+	
+	float minfg = Float.MAX_VALUE, minfga = Float.MAX_VALUE, minfgp = Float.MAX_VALUE;
+	float min_3p = Float.MAX_VALUE, min_3pa = Float.MAX_VALUE, min_3pp = Float.MAX_VALUE;
+	float min_2p = Float.MAX_VALUE, min_2pa = Float.MAX_VALUE, min_2pp = Float.MAX_VALUE;
+	float minft= Float.MAX_VALUE, minfta= Float.MAX_VALUE, minftp;
+	float minorb= Float.MAX_VALUE, mindrb= Float.MAX_VALUE, mintrb= Float.MAX_VALUE;
+	float minast= Float.MAX_VALUE, minstl= Float.MAX_VALUE, minblk= Float.MAX_VALUE, mintov= Float.MAX_VALUE, minpf= Float.MAX_VALUE;
+	float minpts= Float.MAX_VALUE;
+	
 	public Database () {
 		teams = new Team[teamNum];
 		teamIndex = new HashMap<String, Integer>();
@@ -38,6 +54,408 @@ public class Database {
 		readGameEvent(allGameDataFile);
 		readPlayerEfficiency(efficiencyFile);
 		System.out.println("Database read data finished!");
+	}
+	
+	public void readTeamAvgData (String fileName) {
+		File file = null;
+		FileReader fr = null;
+		BufferedReader br = null;
+		
+		try {
+			
+			file = new File(fileName);
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			
+			br.readLine();
+			String line;
+			String[] array;
+			for (int i = 0; i < teamNum; i++) {
+				line = br.readLine();
+				array = line.split(",");
+				teams[i].fg = Float.parseFloat(array[4]);
+				if (maxfg < teams[i].fg) {
+					maxfg = teams[i].fg;
+				}
+				if (minfg > teams[i].fg) {
+					minfg = teams[i].fg;
+				}
+			
+				teams[i].fga = Float.parseFloat(array[5]);
+				if (maxfga < teams[i].fga) {
+					maxfga = teams[i].fga;
+				}
+				if (minfga > teams[i].fga) {
+					minfga = teams[i].fga;
+				}
+			
+				teams[i].fgp = Float.parseFloat(array[6]);
+				if (maxfgp < teams[i].fgp) {
+					maxfgp = teams[i].fgp;
+				}
+				if (minfgp > teams[i].fgp) {
+					minfgp = teams[i].fgp;
+				}
+			
+				teams[i]._3p = Float.parseFloat(array[7]);
+				if (max_3p < teams[i]._3p) {
+					max_3p = teams[i]._3p;
+				}
+				if (min_3p > teams[i]._3p) {
+					min_3p = teams[i]._3p;
+				}
+			
+				teams[i]._3pa = Float.parseFloat(array[8]);
+				if (max_3pa < teams[i]._3pa) {
+					max_3pa = teams[i]._3pa;
+				}
+				if (min_3pa > teams[i]._3pa) {
+					min_3pa = teams[i]._3pa;
+				}
+			
+				teams[i]._3pp = Float.parseFloat(array[9]);
+				if (max_3pp < teams[i]._3pp) {
+					max_3pp = teams[i]._3pp;
+				}
+				if (min_3pp > teams[i]._3pp) {
+					min_3pp = teams[i]._3pp;
+				}
+			
+				teams[i]._2p = Float.parseFloat(array[10]);
+				if (max_2p < teams[i]._2p) {
+					max_2p = teams[i]._2p;
+				}
+				if (min_2p > teams[i]._2p) {
+					min_2p = teams[i]._2p;
+				}
+			
+				teams[i]._2pa = Float.parseFloat(array[11]);
+				if (max_2pa < teams[i]._2pa) {
+					max_2pa = teams[i]._2pa;
+				}
+				if (min_2pa > teams[i]._2pa) {
+					min_2pa = teams[i]._2pa;
+				}
+			
+				teams[i]._2pp = Float.parseFloat(array[12]);
+				if (max_2pp < teams[i]._2pp) {
+					max_2pp = teams[i]._2pp;
+				}
+				if (min_2pp > teams[i]._2pp) {
+					min_2pp = teams[i]._2pp;
+				}
+			
+				teams[i].ft = Float.parseFloat(array[13]);
+				if (maxft < teams[i].ft) {
+					maxft = teams[i].ft;
+				}
+				if (minft > teams[i].ft) {
+					minft = teams[i].ft;
+				}
+			
+				teams[i].fta = Float.parseFloat(array[14]);
+				if (maxfta < teams[i].fta) {
+					maxfta = teams[i].fta;
+				}
+				if (minfta > teams[i].fta) {
+					minfta = teams[i].fta;
+				}
+			
+				teams[i].ftp = Float.parseFloat(array[15]);
+				if (maxftp < teams[i].ftp) {
+					maxftp = teams[i].ftp;
+				}
+				if (minftp > teams[i].ftp) {
+					minftp = teams[i].ftp;
+				}
+			
+				teams[i].orb = Float.parseFloat(array[16]);
+				if (maxorb < teams[i].orb) {
+					maxorb = teams[i].orb;
+				}
+				if (minorb > teams[i].orb) {
+					minorb = teams[i].orb;
+				}
+			
+				teams[i].drb = Float.parseFloat(array[17]);
+				if (maxdrb < teams[i].drb) {
+					maxdrb = teams[i].drb;
+				}
+				if (mindrb > teams[i].drb) {
+					mindrb = teams[i].drb;
+				}
+			
+				teams[i].trb = Float.parseFloat(array[18]);
+				if (maxtrb < teams[i].trb) {
+					maxtrb = teams[i].trb;
+				}
+				if (mintrb > teams[i].trb) {
+					mintrb = teams[i].trb;
+				}
+			
+				teams[i].ast = Float.parseFloat(array[19]);
+				if (maxast < teams[i].ast) {
+					maxast = teams[i].ast;
+				}
+				if (minast > teams[i].ast) {
+					minast = teams[i].ast;
+				}
+			
+				teams[i].stl = Float.parseFloat(array[20]);
+				if (maxstl < teams[i].stl) {
+					maxstl = teams[i].stl;
+				}
+				if (minstl > teams[i].stl) {
+					minstl = teams[i].stl;
+				}
+			
+				teams[i].blk = Float.parseFloat(array[21]);
+				if (maxblk < teams[i].blk) {
+					maxblk = teams[i].blk;
+				}
+				if (minblk > teams[i].blk) {
+					minblk = teams[i].blk;
+				}
+			
+				teams[i].tov = Float.parseFloat(array[22]);
+				if (maxtov < teams[i].tov) {
+					maxtov = teams[i].tov;
+				}
+				if (mintov > teams[i].tov) {
+					mintov = teams[i].tov;
+				}
+			
+				teams[i].pf = Float.parseFloat(array[23]);
+				if (maxpf < teams[i].pf) {
+					maxpf = teams[i].pf;
+				}
+				if (minpf > teams[i].pf) {
+					minpf = teams[i].pf;
+				}
+			
+				teams[i].pts = Float.parseFloat(array[25]);
+				if (maxpts < teams[i].pts) {
+					maxpts = teams[i].pts;
+				}
+				if (minpts > teams[i].pts) {
+					minpts = teams[i].pts;
+				}
+			
+			}
+			
+			
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+			
+			if (fr != null) {
+				try {
+					fr.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void readTeamOppoAvgData (String fileName) {
+		File file = null;
+		FileReader fr = null;
+		BufferedReader br = null;
+		
+		try {
+			
+			file = new File(fileName);
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			
+			br.readLine();
+			String line;
+			String[] array;
+			for (int i = 0; i < teamNum; i++) {
+				line = br.readLine();
+				array = line.split(",");
+				teams[i].opfg = Float.parseFloat(array[4]);
+				if (maxfg > teams[i].opfg) {
+					maxfg = teams[i].opfg;
+				}
+				if (minfg > teams[i].opfg) {
+					minfg = teams[i].opfg;
+				}
+				
+				teams[i].opfga = Float.parseFloat(array[5]);
+				if (maxfga < teams[i].opfga) {
+					maxfga = teams[i].opfga;
+				}
+				if (minfga > teams[i].opfga) {
+					minfga = teams[i].opfga;
+				}
+				teams[i].opfgp = Float.parseFloat(array[6]);
+				if (maxfgp < teams[i].opfgp) {
+					maxfgp = teams[i].opfgp;
+				}
+				if (minfgp > teams[i].opfgp) {
+					minfgp = teams[i].opfgp;
+				}
+			
+				teams[i].op_3p = Float.parseFloat(array[7]);
+				if (max_3p < teams[i].op_3p) {
+					max_3p = teams[i].op_3p;
+				}
+				if (min_3p > teams[i].op_3p) {
+					min_3p = teams[i].op_3p;
+				}
+			
+				teams[i].op_3pa = Float.parseFloat(array[8]);
+				if (max_3pa < teams[i].op_3pa) {
+					max_3pa = teams[i].op_3pa;
+				}
+				if (min_3pa > teams[i].op_3pa) {
+					min_3pa = teams[i].op_3pa;
+				}
+			
+				teams[i].op_3pp = Float.parseFloat(array[9]);
+				if (max_3pp < teams[i].op_3pp) {
+					max_3pp = teams[i].op_3pp;
+				}
+				if (min_3pp > teams[i].op_3pp) {
+					min_3pp = teams[i].op_3pp;
+				}
+				teams[i].op_2p = Float.parseFloat(array[10]);
+				if (max_2p < teams[i].op_2p) {
+					max_2p = teams[i].op_2p;
+				}
+				if (min_2p > teams[i].op_2p) {
+					min_2p = teams[i].op_2p;
+				}
+				teams[i].op_2pa = Float.parseFloat(array[11]);
+				if (max_2pa < teams[i].op_2pa) {
+					max_2pa = teams[i].op_2pa;
+				}
+				if (min_2pa > teams[i].op_2pa) {
+					min_2pa = teams[i].op_2pa;
+				}
+			
+				teams[i].op_2pp = Float.parseFloat(array[12]);
+				if (max_2pp < teams[i].op_2pp) {
+					max_2pp = teams[i].op_2pp;
+				}
+				if (min_2pp > teams[i].op_2pp) {
+					min_2pp = teams[i].op_2pp;
+				}
+				teams[i].opft = Float.parseFloat(array[13]);
+				if (maxft < teams[i].opft) {
+					maxft = teams[i].opft;
+				}
+				if (minft > teams[i].opft) {
+					minft = teams[i].opft;
+				}
+			
+				teams[i].opfta = Float.parseFloat(array[14]);
+				if (maxfta < teams[i].opfta) {
+					maxfta = teams[i].opfta;
+				}
+				if (minfta > teams[i].opfta) {
+					minfta = teams[i].opfta;
+				}
+				teams[i].opftp = Float.parseFloat(array[15]);
+				if (maxftp < teams[i].opftp) {
+					maxftp = teams[i].opftp;
+				}
+				if (minftp > teams[i].opftp) {
+					minftp = teams[i].opftp;
+				}
+				teams[i].oporb = Float.parseFloat(array[16]);
+				if (maxorb < teams[i].oporb) {
+					maxorb = teams[i].oporb;
+				}
+				if (minorb > teams[i].oporb) {
+					minorb = teams[i].oporb;
+				}
+				teams[i].opdrb = Float.parseFloat(array[17]);
+				if (maxdrb < teams[i].opdrb) {
+					maxdrb = teams[i].opdrb;
+				}
+				if (mindrb > teams[i].opdrb) {
+					mindrb = teams[i].opdrb;
+				}
+				teams[i].optrb = Float.parseFloat(array[18]);
+				if (maxtrb < teams[i].optrb) {
+					maxtrb = teams[i].optrb;
+				}
+				if (mintrb > teams[i].optrb) {
+					mintrb = teams[i].optrb;
+				}
+				teams[i].opast = Float.parseFloat(array[19]);
+				if (maxast < teams[i].opast) {
+					maxast = teams[i].opast;
+				}
+				if (minast > teams[i].opast) {
+					minast = teams[i].opast;
+				}
+				teams[i].opstl = Float.parseFloat(array[20]);
+				if (maxstl < teams[i].opstl) {
+					maxstl = teams[i].opstl;
+				}
+				if (minstl > teams[i].opstl) {
+					minstl = teams[i].opstl;
+				}
+				teams[i].opblk = Float.parseFloat(array[21]);
+				if (maxblk < teams[i].opblk) {
+					maxblk = teams[i].opblk;
+				}
+				if (minblk > teams[i].opblk) {
+					minblk = teams[i].opblk;
+				}
+				teams[i].optov = Float.parseFloat(array[22]);
+				if (maxtov < teams[i].optov) {
+					maxtov = teams[i].optov;
+				}
+				if (mintov > teams[i].optov) {
+					mintov = teams[i].optov;
+				}
+				teams[i].oppf = Float.parseFloat(array[23]);
+				if (maxpf < teams[i].oppf) {
+					maxpf = teams[i].oppf;
+				}
+				if (minpf > teams[i].oppf) {
+					minpf = teams[i].oppf;
+				}
+				teams[i].oppts = Float.parseFloat(array[25]);
+				if (maxpts < teams[i].oppts) {
+					maxpts = teams[i].oppts;
+				}
+				if (minpts > teams[i].oppts) {
+					minpts = teams[i].oppts;
+				}
+			}
+
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+			
+			if (fr != null) {
+				try {
+					fr.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	

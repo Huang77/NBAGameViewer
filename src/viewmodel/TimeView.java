@@ -22,9 +22,8 @@ public class TimeView {
 	int width, height;
 	
 	Database database;
-	int[] verticalOrder;
+	int[] verticalOrder;  // vertical order of the teams 
 	int teamGap = 28;
-	
 	
 	HashMap<Integer, WinLostLine_V2> teamCircleMap = new HashMap<Integer, WinLostLine_V2>();
 	
@@ -49,11 +48,11 @@ public class TimeView {
 	
 	public void setSingleTeam (int teamIndex) {
 		WinLostLine_V2 line = new WinLostLine_V2(teamIndex, database);
-		line.setPosition(leftTopX + circleMarginX, leftTopY + circleMarginY + this.verticalOrder[teamIndex] * (teamGap));
+		line.setPosition(leftTopX, leftTopY + this.verticalOrder[teamIndex] * (teamGap));
 		teamCircleMap.put(teamIndex, line);
 	}
 	
-	public static int convertTimeToIndex (String date) {
+/*	public static int convertTimeToIndex (String date) {
 		String[] array = date.split(" ");
 		int index = Integer.parseInt(array[2]);
 		if (array[1].equals("Oct")) {
@@ -74,7 +73,7 @@ public class TimeView {
 			System.out.println("Data Error: " + date);
 		}
 		return index;
-	}
+	}*/
 	
 	public void setVerticalOrder (TeamSortType sortType) {
 		if (verticalOrder == null) {

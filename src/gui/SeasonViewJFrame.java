@@ -20,6 +20,8 @@ public class SeasonViewJFrame extends JFrame {
 	final String allGameStatFileName = "data/gameScoreList_2013.csv";
 	final String allGameDataFileName = "data/all_game_record_2013.csv";
 	final String efficiencyFile = "data/plus-minus";
+	final String teamDataFile = "data/leagues_NBA_2014_team.csv";
+	final String oppoDataFile = "data/leagues_NBA_2014_opponent.csv";
 	
 	SeasonCanvas seasonCanvas;
 	Database database;
@@ -81,6 +83,9 @@ public class SeasonViewJFrame extends JFrame {
 		mainPanel = new JPanel();
 		this.add(mainPanel);
 		database = new Database(teamNameFileName, winLostFileName, allGameStatFileName, allGameDataFileName, efficiencyFile);
+		database.readTeamAvgData(teamDataFile);
+		database.readTeamOppoAvgData(oppoDataFile);
+		
 		seasonCanvas = new SeasonCanvas(database, seasonCanvasWidth, seasonCanvasHeight);
 		mainPanel.add(seasonCanvas);
 	}

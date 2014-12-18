@@ -18,23 +18,27 @@ public class LeftTeamBar {
 	public LeftTeamBar (int teamIndex) {
 		this.teamIndex = teamIndex;
 	}
+	
 	public void setBackgroundRectSize (int x, int y, int width, int height) {
 		rectBackground.x = x;
 		rectBackground.y = y;
 		rectBackground.width = width;
 		rectBackground.height = height;
 	}
+	
 	public void setFrontRectSize (int x, int y, int width, int height) {
 		rectFront.x = x;
 		rectFront.y = y;
 		rectFront.width = width;
 		rectFront.height = height;
 	}
+	
 	public void setBackgroundColor (int[] color) {
 		colorBackground[0] = color[0];
 		colorBackground[1] = color[1];
 		colorBackground[2] = color[2];
 	}
+	
 	public void setFrontColor (int[] color) {
 		colorFront[0] = color[0];
 		colorFront[1] = color[1];
@@ -63,6 +67,34 @@ public class LeftTeamBar {
     	canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
     	canvas.fill(0);
         if (this.teamIndex == canvas.oppoView.leftHoverTextIndex) {
+        	canvas.fill(250,0,0);
+        }
+    	canvas.text(canvas.database.teamsMap.get(teamIndex).name, rectBackground.x + rectBackground.width - 5, rectBackground.y + rectBackground.height / 2);
+		canvas.popStyle();
+	}
+	
+	public void draw (SeasonCanvas canvas, boolean hover) {
+		canvas.pushStyle();
+		//canvas.stroke(180, 180, 180);
+	    //canvas.strokeWeight(strokeW);
+		canvas.noStroke();
+		if (hover) {
+			canvas.stroke(255,0,0);
+			canvas.strokeWeight(1.5f);
+		}
+		
+		canvas.fill(colorBackground[0], colorBackground[1], colorBackground[2]);
+		canvas.rect(rectBackground.x, rectBackground.y, rectBackground.width, rectBackground.height);
+		//canvas.stroke(180, 180, 180);
+		//canvas.strokeWeight(strokeW);
+		canvas.noStroke();
+		canvas.fill(colorFront[0], colorFront[1], colorFront[2]);
+		canvas.rect(rectFront.x + 1, rectFront.y + 1, rectFront.width - 1, rectFront.height - 1);
+
+		// draw team names
+    	canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+    	canvas.fill(0);
+        if (hover) {
         	canvas.fill(250,0,0);
         }
     	canvas.text(canvas.database.teamsMap.get(teamIndex).name, rectBackground.x + rectBackground.width - 5, rectBackground.y + rectBackground.height / 2);
