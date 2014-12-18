@@ -20,21 +20,21 @@ public class Database {
 	public int maxScoreDiff = Integer.MIN_VALUE;
 	public int minScoreDiff = Integer.MAX_VALUE;
 	
-	float maxfg = -Float.MAX_VALUE, maxfga = -Float.MAX_VALUE, maxfgp = -Float.MAX_VALUE;
-	float max_3p = -Float.MAX_VALUE, max_3pa = -Float.MAX_VALUE, max_3pp = -Float.MAX_VALUE;
-	float max_2p = -Float.MAX_VALUE, max_2pa = -Float.MAX_VALUE, max_2pp = -Float.MAX_VALUE;
-	float maxft= -Float.MAX_VALUE, maxfta= -Float.MAX_VALUE, maxftp;
-	float maxorb= -Float.MAX_VALUE, maxdrb= -Float.MAX_VALUE, maxtrb= -Float.MAX_VALUE;
-	float maxast= -Float.MAX_VALUE, maxstl= -Float.MAX_VALUE, maxblk= -Float.MAX_VALUE, maxtov= -Float.MAX_VALUE, maxpf= -Float.MAX_VALUE;
-	float maxpts= -Float.MAX_VALUE;
+	public float maxfg = -Float.MAX_VALUE, maxfga = -Float.MAX_VALUE, maxfgp = -Float.MAX_VALUE;
+	public float max_3p = -Float.MAX_VALUE, max_3pa = -Float.MAX_VALUE, max_3pp = -Float.MAX_VALUE;
+	public float max_2p = -Float.MAX_VALUE, max_2pa = -Float.MAX_VALUE, max_2pp = -Float.MAX_VALUE;
+	public float maxft= -Float.MAX_VALUE, maxfta= -Float.MAX_VALUE, maxftp;
+	public float maxorb= -Float.MAX_VALUE, maxdrb= -Float.MAX_VALUE, maxtrb= -Float.MAX_VALUE;
+	public float maxast= -Float.MAX_VALUE, maxstl= -Float.MAX_VALUE, maxblk= -Float.MAX_VALUE, maxtov= -Float.MAX_VALUE, maxpf= -Float.MAX_VALUE;
+	public float maxpts= -Float.MAX_VALUE;
 	
-	float minfg = Float.MAX_VALUE, minfga = Float.MAX_VALUE, minfgp = Float.MAX_VALUE;
-	float min_3p = Float.MAX_VALUE, min_3pa = Float.MAX_VALUE, min_3pp = Float.MAX_VALUE;
-	float min_2p = Float.MAX_VALUE, min_2pa = Float.MAX_VALUE, min_2pp = Float.MAX_VALUE;
-	float minft= Float.MAX_VALUE, minfta= Float.MAX_VALUE, minftp;
-	float minorb= Float.MAX_VALUE, mindrb= Float.MAX_VALUE, mintrb= Float.MAX_VALUE;
-	float minast= Float.MAX_VALUE, minstl= Float.MAX_VALUE, minblk= Float.MAX_VALUE, mintov= Float.MAX_VALUE, minpf= Float.MAX_VALUE;
-	float minpts= Float.MAX_VALUE;
+	public float minfg = Float.MAX_VALUE, minfga = Float.MAX_VALUE, minfgp = Float.MAX_VALUE;
+	public float min_3p = Float.MAX_VALUE, min_3pa = Float.MAX_VALUE, min_3pp = Float.MAX_VALUE;
+	public float min_2p = Float.MAX_VALUE, min_2pa = Float.MAX_VALUE, min_2pp = Float.MAX_VALUE;
+	public float minft= Float.MAX_VALUE, minfta= Float.MAX_VALUE, minftp;
+	public float minorb= Float.MAX_VALUE, mindrb= Float.MAX_VALUE, mintrb= Float.MAX_VALUE;
+	public float minast= Float.MAX_VALUE, minstl= Float.MAX_VALUE, minblk= Float.MAX_VALUE, mintov= Float.MAX_VALUE, minpf= Float.MAX_VALUE;
+	public float minpts= Float.MAX_VALUE;
 	
 	public Database () {
 		teams = new Team[teamNum];

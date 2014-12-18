@@ -29,21 +29,21 @@ public class Team {
 	int[] mar;
 	int[] apr;
 	
-	float fg, fga, fgp;
-	float _3p, _3pa, _3pp;
-	float _2p, _2pa, _2pp;
-	float ft, fta, ftp;
-	float orb, drb, trb;
-	float ast, stl, blk, tov, pf;
-	float pts;
+	public float fg, fga, fgp;
+	public float _3p, _3pa, _3pp;
+	public float _2p, _2pa, _2pp;
+	public float ft, fta, ftp;
+	public float orb, drb, trb;
+	public float ast, stl, blk, tov, pf;
+	public float pts;
 	
-	float opfg, opfga, opfgp;
-	float op_3p, op_3pa, op_3pp;
-	float op_2p, op_2pa, op_2pp;
-	float opft, opfta, opftp;
-	float oporb, opdrb, optrb;
-	float opast, opstl, opblk, optov, oppf;
-	float oppts;
+	public float opfg, opfga, opfgp;
+	public float op_3p, op_3pa, op_3pp;
+	public float op_2p, op_2pa, op_2pp;
+	public float opft, opfta, opftp;
+	public float oporb, opdrb, optrb;
+	public float opast, opstl, opblk, optov, oppf;
+	public float oppts;
 	
 	
 	
