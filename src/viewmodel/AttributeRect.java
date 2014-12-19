@@ -3,7 +3,7 @@ package viewmodel;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Float;
 
-import datamodel_new.Database;
+import datamodel.Database;
 import processing.core.PApplet;
 
 public class AttributeRect {
@@ -21,6 +21,8 @@ public class AttributeRect {
 	float value, oValue;
 	int teamIndex;
 	private static Database database = null;
+	
+	boolean hover = false;
 	
 	Rectangle2D.Float leftRect = new Rectangle2D.Float();
 	Rectangle2D.Float rightRect = new Rectangle2D.Float();
@@ -73,22 +75,49 @@ public class AttributeRect {
 		return PApplet.map(value, minValue, maxValue, minWidth, maxWidth);
 	}
 	
+	public float getLeftX (SeasonCanvas canvas) {
+		return leftRect.x - canvas.textWidth(String.valueOf(df.format(value))) - 4;
+	}
+	public float getRightX (SeasonCanvas canvas) {
+		return rightRect.x + rightRect.width + canvas.textWidth(String.valueOf(df.format(oValue))) + 4;
+	}
+	public float getMiddleY () {
+		return middleY + barHeight / 2;
+	}
+	
 	public void draw (SeasonCanvas canvas) {
 		canvas.pushStyle();
 		canvas.stroke(180);
 		canvas.line(middleX, middleY - 2, middleX, middleY + barHeight + 2);
 		canvas.noStroke();
-		canvas.fill(colorLeft[0], colorLeft[1], colorLeft[2], 50);
+		if (teamIndex == TimeView.hoverTeamIndex) {
+			canvas.strokeWeight(2f);
+			canvas.stroke(180);
+		}
+		canvas.fill(colorLeft[0], colorLeft[1], colorLeft[2], 150);
 		canvas.rect(leftRect.x, leftRect.y, leftRect.width, leftRect.height);
-		canvas.fill(colorRight[0], colorRight[1], colorRight[2], 50);
+		canvas.fill(colorRight[0], colorRight[1], colorRight[2], 150);
 		canvas.rect(rightRect.x, rightRect.y, rightRect.width, rightRect.height);
 		
 		canvas.textSize(12);
 		canvas.fill(180);
+		if (teamIndex == TimeView.hoverTeamIndex) {
+			canvas.fill(80);
+			canvas.textSize(14);
+		}
 		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
 		canvas.text(df.format(value), leftRect.x, leftRect.y + leftRect.height / 2);
 		canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
 		canvas.text(df.format(oValue), rightRect.x + rightRect.width , rightRect.y + rightRect.height / 2);
 		canvas.popStyle();
+	}
+	
+	public void mouseHover (SeasonCanvas canvas) {
+		if (leftRect.contains(canvas.mouseX, canvas.mouseY) || rightRect.contains(canvas.mouseX, canvas.mouseY)) {
+			hover = true;
+			TimeView.hoverTeamIndex = teamIndex;
+		} else {
+			hover = false;
+		}
 	}
 }

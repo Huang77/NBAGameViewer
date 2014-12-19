@@ -1,4 +1,4 @@
-package datamodel_new;
+package teamsort;
 
 public enum TeamSortType {
 	Name,
@@ -20,5 +20,16 @@ public enum TeamSortType {
 	Jan,
 	Feb,
 	Mar,
-	Apr
+	Apr,
+	
+	Points,
+	OpPoints,
+	Rebound,
+	OpRebound,
+	Assist,
+	OpAssist,
+	Block,
+	OpBlock,
+	Turnover,
+	OpTurnover
 }

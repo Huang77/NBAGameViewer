@@ -10,10 +10,11 @@ public class LeftTeamBar {
 	Rectangle2D.Float rectFront = new Rectangle2D.Float();
 	
 	int strokeW = 1;
-	int[] colorBackground = {222,235,247};
+	int[] colorBackground = {173,221,142};
 	int[] colorFront = {252,146,114};
 	
 	int teamIndex;
+	boolean hover = false;
 	
 	public LeftTeamBar (int teamIndex) {
 		this.teamIndex = teamIndex;
@@ -54,6 +55,20 @@ public class LeftTeamBar {
 		rectFront.y += transY;
 	}
 	
+	public void drawWinRatioText (SeasonCanvas canvas) {
+		canvas.pushStyle();
+
+		// draw team names
+    	canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+    	canvas.fill(0);
+        int[] winRatio = canvas.database.teamsMap.get(teamIndex).getOverall();
+        String text = winRatio[0] + "-" + winRatio[1];
+        canvas.textSize(12);
+        canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
+    	canvas.text(text, rectBackground.x + 1, rectBackground.y + rectBackground.height / 2);
+		canvas.popStyle();
+	}
+	
 	public void draw (SeasonCanvas canvas) {
 		canvas.pushStyle();
 		canvas.stroke(180, 180, 180);
@@ -70,6 +85,7 @@ public class LeftTeamBar {
         	canvas.fill(250,0,0);
         }
     	canvas.text(canvas.database.teamsMap.get(teamIndex).name, rectBackground.x + rectBackground.width - 5, rectBackground.y + rectBackground.height / 2);
+    	drawWinRatioText(canvas);
 		canvas.popStyle();
 	}
 	
@@ -78,26 +94,32 @@ public class LeftTeamBar {
 		//canvas.stroke(180, 180, 180);
 	    //canvas.strokeWeight(strokeW);
 		canvas.noStroke();
-		if (hover) {
+		if (teamIndex == TimeView.hoverTeamIndex) {
 			canvas.stroke(255,0,0);
 			canvas.strokeWeight(1.5f);
 		}
 		
-		canvas.fill(colorBackground[0], colorBackground[1], colorBackground[2]);
+		canvas.fill(colorBackground[0], colorBackground[1], colorBackground[2], 220);
 		canvas.rect(rectBackground.x, rectBackground.y, rectBackground.width, rectBackground.height);
 		//canvas.stroke(180, 180, 180);
 		//canvas.strokeWeight(strokeW);
 		canvas.noStroke();
-		canvas.fill(colorFront[0], colorFront[1], colorFront[2]);
+		canvas.fill(colorFront[0], colorFront[1], colorFront[2], 220);
 		canvas.rect(rectFront.x + 1, rectFront.y + 1, rectFront.width - 1, rectFront.height - 1);
 
 		// draw team names
     	canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
     	canvas.fill(0);
-        if (hover) {
-        	canvas.fill(250,0,0);
-        }
     	canvas.text(canvas.database.teamsMap.get(teamIndex).name, rectBackground.x + rectBackground.width - 5, rectBackground.y + rectBackground.height / 2);
-		canvas.popStyle();
+    	drawWinRatioText(canvas);
+    	canvas.popStyle();
+	}
+	public void mouseHover (SeasonCanvas canvas) {
+		if (rectBackground.contains(canvas.mouseX, canvas.mouseY)) {
+			hover = true;
+			TimeView.hoverTeamIndex = teamIndex;
+		} else {
+			hover = false;
+		}
 	}
 }

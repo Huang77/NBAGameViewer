@@ -5,9 +5,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Float;
 import java.util.ArrayList;
 
-import datamodel_new.Database;
-import datamodel_new.Event;
-import datamodel_new.MadeScoreEvent;
+import datamodel.Database;
+import datamodel.Event;
+import datamodel.MadeScoreEvent;
 import processing.core.PApplet;
 
 public class DiffHorizonGraph {

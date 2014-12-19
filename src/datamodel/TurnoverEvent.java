@@ -1,4 +1,4 @@
-package datamodel_new;
+package datamodel;
 
 public class TurnoverEvent extends Event {
 	

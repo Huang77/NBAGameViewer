@@ -1,11 +1,12 @@
 package viewmodel;
 
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
-import datamodel_new.Efficiency;
-import datamodel_new.PlayerGameStat;
+import datamodel.Efficiency;
+import datamodel.PlayerGameStat;
 
 public class PlayerBar {
 	static final int[] colorPos = {222,45,38};
@@ -108,4 +109,12 @@ public class PlayerBar {
 		}
 	}
 	
+/*	public class InsideCircle {
+		int[] color = new int[3];
+		Ellipse2D.Float circle = new Ellipse2D.Float();
+		String type;
+		
+		public InsideCircle (int type, float x)
+	}
+	*/
 }

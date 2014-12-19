@@ -14,11 +14,12 @@ import java.util.ArrayList;
 
 
 
+
 import javax.swing.JFrame;
 
 import processing.core.PApplet;
-import datamodel_new.Database;
-import datamodel_new.Team;
+import datamodel.Database;
+import datamodel.Team;
 
 public class WinLostLine_V2 {
 	static final int[] colorWin = {252,146,114};
@@ -41,6 +42,7 @@ public class WinLostLine_V2 {
 	LeftTeamBar leftTeamBar;
 	ArrayList<WinLostStreak> streaks = new ArrayList<WinLostStreak>();  
 	int startX, startY;
+	int endX, endY;
 	
 	public WinLostLine_V2 (int teamIndex, Database database) {
 		this.teamIndex = teamIndex;
@@ -51,6 +53,8 @@ public class WinLostLine_V2 {
 	public void setPosition (int x, int y) {
 		startX = x;
 		startY = y;
+		endX = startX + 82 * (horizonGap + barWidth);
+		endY = startY + barHeight;
 		setStreaks();
 		setupLeftTeamBar();
 	}
@@ -135,17 +139,24 @@ public class WinLostLine_V2 {
 	}
 	
 	public void draw (SeasonCanvas canvas) {
-		hover = false;
 		canvas.pushStyle();
 		for (int i = 0; i < streaks.size(); i++) {
 			streaks.get(i).draw(canvas);
-			if (streaks.get(i).hover == true) {
-				hover = true;
-			}
 		}
 		//drawTeamName(canvas);
 		leftTeamBar.draw(canvas, hover);
 		canvas.popStyle();
+	}
+	
+	public void mouseHover (SeasonCanvas canvas) {
+		hover = false;
+		leftTeamBar.mouseHover(canvas);
+		for (int i = 0; i < streaks.size(); i++) {
+			if (streaks.get(i).hover == true) {
+				hover = true;
+				TimeView.hoverTeamIndex = teamIndex;
+			}
+		}
 	}
 	
 	class WinLostStreak {

@@ -1,6 +1,6 @@
 package viewmodel;
 
-import datamodel_new.Database;
+import datamodel.Database;
 import processing.core.PApplet;
 import processing.core.PFont;
 

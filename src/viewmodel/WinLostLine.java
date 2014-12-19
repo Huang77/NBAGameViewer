@@ -5,8 +5,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
-import datamodel_new.Database;
-import datamodel_new.Team;
+import datamodel.Database;
+import datamodel.Team;
 
 public class WinLostLine {
 	static final int[] colorWin = {252,146,114};

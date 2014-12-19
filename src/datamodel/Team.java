@@ -1,4 +1,4 @@
-package datamodel_new;
+package datamodel;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ public class Team {
 	
 	ArrayList<Integer> gameIndex = new ArrayList<Integer>();
 	
-	int[] overall;
+	public int[] overall;
 	int[] home;
 	int[] road;
 	int[] eastOppo;

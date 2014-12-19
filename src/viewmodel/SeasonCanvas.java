@@ -3,18 +3,18 @@ package viewmodel;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import datamodel_new.Event;
-import datamodel_new.MadeScoreEvent;
-import datamodel_new.MissScoreEvent;
-import datamodel_new.PlayerGameStat;
-import datamodel_new.Team;
-import datamodel_new.Database;
-import datamodel_new.GameStatData;
-import datamodel_new.TeamSortByOverall;
-import datamodel_new.TeamSortType;
-import datamodel_new.WinLostCellData;
+import datamodel.Database;
+import datamodel.Event;
+import datamodel.GameStatData;
+import datamodel.MadeScoreEvent;
+import datamodel.MissScoreEvent;
+import datamodel.PlayerGameStat;
+import datamodel.Team;
+import datamodel.WinLostCellData;
 import processing.core.PApplet;
 import processing.core.PFont;
+import teamsort.TeamSortByOverall;
+import teamsort.TeamSortType;
 
 public class SeasonCanvas extends PApplet {
 	final int[] colorForWinMore = {252,146,114};
@@ -42,7 +42,7 @@ public class SeasonCanvas extends PApplet {
 	Database database;
 	// test diff score horizon graph
 	OppoView oppoView;
-	TimeView timeView;
+	public TimeView timeView;
 
 	public void setOppoView (int startX, int startY, int width, int height) {
 		oppoView = new OppoView(database);
@@ -52,7 +52,7 @@ public class SeasonCanvas extends PApplet {
 	public void setTimeView (int startX, int startY, int width, int height) {
 		timeView = new TimeView(database);
 		timeView.setPosition(startX, startY, width, height);
-		timeView.setAllTeam();
+		timeView.setup();
 	}
 	
 	
@@ -113,7 +113,14 @@ public class SeasonCanvas extends PApplet {
         		oppoView.leftHoverTextIndex = -1;
         		oppoView.topHoverTextIndex = -1;
         	}
-    	} 
-
+    	} else if (displayType == 1) {
+    		timeView.mouseMoved(this);
+    	}
+    }
+    
+    public void mouseClicked () {
+    	if (displayType == 1) {
+    		timeView.mouseClicked(this);
+    	}
     }
 }

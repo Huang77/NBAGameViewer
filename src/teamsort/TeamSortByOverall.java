@@ -1,8 +1,10 @@
-package datamodel_new;
+package teamsort;
 
 import java.util.Comparator;
 
-public class TeamSortByOverall implements Comparator<Team>{
+import datamodel.Team;
+
+public class TeamSortByOverall implements Comparator<Team> {
 
 	@Override
 	public int compare(Team o1, Team o2) {

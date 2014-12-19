@@ -2,12 +2,12 @@ package viewmodel;
 
 import java.util.ArrayList;
 
-import datamodel_new.Database;
-import datamodel_new.Event;
-import datamodel_new.GameStatData;
-import datamodel_new.MadeScoreEvent;
-import datamodel_new.MissScoreEvent;
-import datamodel_new.PlayerGameStat;
+import datamodel.Database;
+import datamodel.Event;
+import datamodel.GameStatData;
+import datamodel.MadeScoreEvent;
+import datamodel.MissScoreEvent;
+import datamodel.PlayerGameStat;
 
 public class SingleGameView {
 	

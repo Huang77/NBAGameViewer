@@ -1,4 +1,4 @@
-package datamodel_new;
+package datamodel;
 
 public class ReboundEvent extends Event {
 	String reboundType;

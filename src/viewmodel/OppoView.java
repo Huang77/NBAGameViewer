@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import processing.core.PApplet;
-import datamodel_new.Database;
-import datamodel_new.GameStatData;
-import datamodel_new.Team;
-import datamodel_new.TeamSortByOverall;
-import datamodel_new.TeamSortType;
-import datamodel_new.WinLostCellData;
+import teamsort.TeamSortByOverall;
+import teamsort.TeamSortType;
+import datamodel.Database;
+import datamodel.GameStatData;
+import datamodel.Team;
+import datamodel.WinLostCellData;
 
 public class OppoView {
 	final int[] colorForWinMore = {252,146,114};

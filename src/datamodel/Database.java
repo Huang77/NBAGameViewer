@@ -1,4 +1,4 @@
-package datamodel_new;
+package datamodel;
 
 import java.io.BufferedReader;
 import java.io.File;

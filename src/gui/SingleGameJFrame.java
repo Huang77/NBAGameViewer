@@ -10,8 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 
+
 import viewmodel.SingleGameCanvas;
-import datamodel_new.Database;
+import datamodel.Database;
 
 public class SingleGameJFrame extends JFrame {
 	SingleGameCanvas singleGameCanvas;

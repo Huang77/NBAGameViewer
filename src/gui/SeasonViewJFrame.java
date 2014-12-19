@@ -11,7 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import datamodel_new.Database;
+import datamodel.Database;
 import viewmodel.SeasonCanvas;
 
 public class SeasonViewJFrame extends JFrame {
@@ -41,8 +41,11 @@ public class SeasonViewJFrame extends JFrame {
 	JMenuItem timeViewItem;
 	JMenuItem singleGameViewItem;
 	
+	JMenu toolMenu;
+	JMenuItem filterItem;
 	
-	int winWidth = 1600, winHeight = 1000;
+	
+	int winWidth = 1800, winHeight = 1000;
 	int seasonCanvasWidth = winWidth, seasonCanvasHeight = winHeight;
 	
 	public SeasonViewJFrame () {
@@ -66,8 +69,11 @@ public class SeasonViewJFrame extends JFrame {
 		this.setJMenuBar(menuBar);
 		dataMenu = new JMenu("Data");
 		viewMenu = new JMenu("View");
+		toolMenu = new JMenu("Filter");
 		menuBar.add(dataMenu);
 		menuBar.add(viewMenu);
+		menuBar.add(toolMenu);
+		
 		oppoViewItem = new JMenuItem("Opponent View");
 		timeViewItem = new JMenuItem("Time View");
 		singleGameViewItem = new JMenuItem("Game Flow");
@@ -79,6 +85,10 @@ public class SeasonViewJFrame extends JFrame {
 		season1213 = new JMenuItem("Season 12-13");
 		dataMenu.add(season1314);
 		dataMenu.add(season1213);
+		
+		filterItem = new JMenuItem("Attributes");
+		toolMenu.add(filterItem);
+		
 		
 		mainPanel = new JPanel();
 		this.add(mainPanel);
@@ -110,6 +120,16 @@ public class SeasonViewJFrame extends JFrame {
 				if (seasonCanvas != null) {
 					seasonCanvas.displayType = 1;
 				}
+			}
+			
+		});
+		
+		filterItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				FilterJFrame filerJFrame = new FilterJFrame(seasonCanvas.timeView);
 			}
 			
 		});

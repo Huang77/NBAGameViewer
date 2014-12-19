@@ -2,7 +2,7 @@ package viewmodel;
 
 import java.awt.geom.Ellipse2D;
 
-import datamodel_new.Event;
+import datamodel.Event;
 
 public class ShootCircle {
 	Event event;
