@@ -37,7 +37,7 @@ public class SeasonCanvas extends PApplet {
 	int textSize = 12;
 	PFont font = createFont("Sans Serif", textSize);
 	
-	int leftTopX = 150, leftTopY = 30;
+	int leftTopX = 150, leftTopY = 50;
 	
 	Database database;
 	// test diff score horizon graph
@@ -86,7 +86,7 @@ public class SeasonCanvas extends PApplet {
     public void setup () {
     	size(this.width, this.height);
     	textFont(font);
-    	setOppoView(leftTopX, leftTopY, this.width, this.height);
+    	//setOppoView(leftTopX, leftTopY, this.width, this.height);
     	setTimeView(leftTopX, leftTopY, this.width, this.height);
     }
 	
@@ -122,5 +122,9 @@ public class SeasonCanvas extends PApplet {
     	if (displayType == 1) {
     		timeView.mouseClicked(this);
     	}
+    }
+    
+    public void mouseReleased () {
+    	timeView.mouseReleased(this);
     }
 }

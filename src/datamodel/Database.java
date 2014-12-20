@@ -6,12 +6,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 public class Database {
 	public static final int gameNum = 82;
 	public static final int teamNum = 30;
 	
-	public Team[] teams;
+	public static String[] attrNames = {"Field Goal", "FGA", "FGP%",
+		"2-Points", "2PA", "2PP%",
+		"3-Points", "3PA", "3PP%",
+		"Free Throw", "FTA", "FTP%",
+		"Rebound", "Offense RB", "Defense RB",
+		"Points", "Assist", "Steal", "Block", "Turnover", "Personal Foul",};
+	
+	
+	static public Team[] teams;
 	public HashMap<String, Integer> teamIndex;
 	public HashMap<Integer, Team> teamsMap;
 	public HashMap<Integer, GameStatData> gameMap;
@@ -31,7 +38,7 @@ public class Database {
 	public float minfg = Float.MAX_VALUE, minfga = Float.MAX_VALUE, minfgp = Float.MAX_VALUE;
 	public float min_3p = Float.MAX_VALUE, min_3pa = Float.MAX_VALUE, min_3pp = Float.MAX_VALUE;
 	public float min_2p = Float.MAX_VALUE, min_2pa = Float.MAX_VALUE, min_2pp = Float.MAX_VALUE;
-	public float minft= Float.MAX_VALUE, minfta= Float.MAX_VALUE, minftp;
+	public float minft= Float.MAX_VALUE, minfta= Float.MAX_VALUE, minftp = Float.MAX_VALUE;
 	public float minorb= Float.MAX_VALUE, mindrb= Float.MAX_VALUE, mintrb= Float.MAX_VALUE;
 	public float minast= Float.MAX_VALUE, minstl= Float.MAX_VALUE, minblk= Float.MAX_VALUE, mintov= Float.MAX_VALUE, minpf= Float.MAX_VALUE;
 	public float minpts= Float.MAX_VALUE;
@@ -54,6 +61,76 @@ public class Database {
 		readGameEvent(allGameDataFile);
 		readPlayerEfficiency(efficiencyFile);
 		System.out.println("Database read data finished!");
+	}
+	
+	public float[] getMinMaxByType (String type) {
+		float[] result = new float[2];
+		
+		if (type.equals("Points")) {
+			result[0] = maxpts;
+			result[1] = minpts;
+		} else if (type.equals("Field Goal")) {
+			result[0] = maxfg;
+			result[1] = minfg;
+		} else if (type.equals("FGA")) {
+			result[0] = maxfga;
+			result[1] = minfga;
+		} else if (type.equals("FGP%")) {
+			result[0] = maxfgp;
+			result[1] = minfgp;
+		} else if (type.equals("2-Points")) {
+			result[0] = max_2p;
+			result[1] = min_2p;
+		} else if (type.equals("2PA")) {
+			result[0] = max_2pa;
+			result[1] = min_2pa;
+		} else if (type.equals("2PP%")) {
+			result[0] = max_2pp;
+			result[1] = min_2pp;
+		} else if (type.equals("3-Points")) {
+			result[0] = max_3p;
+			result[1] = min_3p;
+		} else if (type.equals("3PA")) {
+			result[0] = max_3pa;
+			result[1] = min_3pa;
+		} else if (type.equals("3PP%")) {
+			result[0] = max_3pp;
+			result[1] = min_3pp;
+		} else if (type.equals("Free Throw")) {
+			result[0] = maxft;
+			result[1] = minft;
+		} else if (type.equals("FTA")) {
+			result[0] = maxfta;
+			result[1] = minfta;
+		} else if (type.equals("FTP%")) {
+			result[0] = maxftp;
+			result[1] = minftp;
+		} else if (type.equals("Rebound")) {
+			result[0] = maxtrb;
+			result[1] = mintrb;
+		} else if (type.equals("Offense RB")) {
+			result[0] = maxorb;
+			result[1] = minorb;
+		} else if (type.equals("Defense RB")) {
+			result[0] = maxdrb;
+			result[1] = mindrb;
+		} else if (type.equals("Assist")) {
+			result[0] = maxast;
+			result[1] = minast;
+		} else if (type.equals("Steal")) {
+			result[0] = maxstl;
+			result[1] = minstl;
+		} else if (type.equals("Block")) {
+			result[0] = maxblk;
+			result[1] = minblk;
+		} else if (type.equals("Turnover")) {
+			result[0] = maxtov;
+			result[1] = mintov;
+		} else if (type.equals("Personal Foul")) {
+			result[0] = maxpf;
+			result[1] = minpf;
+		} 
+		return result;
 	}
 	
 	public void readTeamAvgData (String fileName) {
@@ -283,7 +360,7 @@ public class Database {
 				line = br.readLine();
 				array = line.split(",");
 				teams[i].opfg = Float.parseFloat(array[4])/ 82;
-				if (maxfg > teams[i].opfg) {
+				if (maxfg < teams[i].opfg) {
 					maxfg = teams[i].opfg;
 				}
 				if (minfg > teams[i].opfg) {

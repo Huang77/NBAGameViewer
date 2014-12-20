@@ -59,6 +59,14 @@ public class WinLostLine_V2 {
 		setupLeftTeamBar();
 	}
 	
+	public void setYPosition (int y) {
+		startY = y;
+		endX = startX + 82 * (horizonGap + barWidth);
+		endY = startY + barHeight;
+		setStreaks();
+		setupLeftTeamBar();
+	}
+	
 	public void setupLeftTeamBar () {
 		int frontWidth;
 		Team tempTeam = database.teamsMap.get(teamIndex);;
@@ -70,6 +78,7 @@ public class WinLostLine_V2 {
 	}
 	
 	public void setStreaks () {
+		streaks.clear();
 		Team curTeam = database.teamsMap.get(teamIndex);
 		int x, y;
 		
@@ -111,16 +120,19 @@ public class WinLostLine_V2 {
 				curStreak = streaks.get(streaks.size() - 1);
 				if (curStreak.win == curBar.win) {
 					curStreak.addGameBar(curBar);
+					curBar.setParent(curStreak);
 				} else {
 					curStreak = new WinLostStreak(curBar.win);
 					curStreak.setNumPosY(startY + barHeight);
 					curStreak.addGameBar(curBar);
+					curBar.setParent(curStreak);
 					streaks.add(curStreak);
 				}
 			} else {
 				curStreak = new WinLostStreak(curBar.win);
 				curStreak.setNumPosY(startY + barHeight);
 				curStreak.addGameBar(curBar);
+				curBar.setParent(curStreak);
 				streaks.add(curStreak);
 			}
 		}
@@ -159,11 +171,13 @@ public class WinLostLine_V2 {
 		}
 	}
 	
-	class WinLostStreak {
+	public class WinLostStreak {
 		ArrayList<DiffBar> bars = new ArrayList<DiffBar>();
 		boolean win = false;
 		int numPosX, numPosY;
 		boolean hover = false;
+		boolean gray = false;
+		
 		
 		public WinLostStreak (boolean win) {
 			this.win = win;
@@ -190,6 +204,9 @@ public class WinLostLine_V2 {
 				}
 				if (i >= 1) {
 					canvas.stroke(50);
+					if (TimeView.filterStreakNum > getGameNum()) {
+						canvas.stroke(180);
+					}
 					if (win == true) {
 						canvas.line(bars.get(i - 1).rect.x + barWidth / 2, bars.get(i - 1).rect.y, bars.get(i).rect.x + barWidth / 2, bars.get(i).rect.y);
 					} else {
@@ -203,6 +220,9 @@ public class WinLostLine_V2 {
 				canvas.textAlign(PApplet.CENTER, PApplet.CENTER);
 				canvas.textSize(10);
 				canvas.fill(0);
+				if (TimeView.filterStreakNum > getGameNum()) {
+					canvas.fill(180);
+				}
 				if (win) {
 					canvas.text(bars.size(), numPosX, numPosY + 5);
 				} else {
@@ -215,7 +235,8 @@ public class WinLostLine_V2 {
 		}
 	}
 	
-	class DiffBar {
+	
+	public class DiffBar {
 		SingleGameJFrame singleGameFrame;
 		Rectangle2D.Float rect = new Rectangle2D.Float();
 		int[] color = new int[3];
@@ -226,6 +247,9 @@ public class WinLostLine_V2 {
 		int scoreDiff;
 		int gameIndex;
 		Database database;
+		WinLostStreak parent;
+		boolean gray = false;
+		
 		
 		public DiffBar (int x, int y, int width, int height, int gameIndex, Database database) {
 			rect.x = x;
@@ -234,7 +258,14 @@ public class WinLostLine_V2 {
 			rect.height = height;
 			this.gameIndex = gameIndex;
 			this.database = database;
+			this.scoreDiff = database.gameMap.get(gameIndex).getScoreDiff();
+			
 		}
+		
+		public void setParent (WinLostStreak parent) {
+			this.parent = parent;
+		}
+		
 		public void setWinLost (boolean win) {
 			this.win = win;
 		}
@@ -267,10 +298,22 @@ public class WinLostLine_V2 {
 				}
 			}
 			canvas.fill(color[0], color[1], color[2]);
+			if (scoreDiff < TimeView.filterDiffScore || parent.getGameNum() < TimeView.filterStreakNum) {
+				gray = true;
+			} else {
+				gray = false;
+			}
+			if (gray == true) {
+				canvas.fill(color[0], color[1], color[2], 50);
+			}
 			canvas.rect(rect.x, rect.y, rect.width, rect.height);
 			canvas.popStyle();
 		}
+		
 		public boolean isMouseHover (SeasonCanvas canvas) {
+			if (gray == true) {
+				return false;
+			}
 			if (rect.contains(canvas.mouseX, canvas.mouseY)) {
 				return true;
 			} else {

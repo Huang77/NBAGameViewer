@@ -12,10 +12,12 @@ public class SortTriangle {
 	Rectangle2D.Float backgroundRect = new Rectangle2D.Float();
 	
 	boolean hover = false;
-	String type;
+	boolean oppo;
+	String sortAttrString;
 	
-	public SortTriangle (String type, float centerX, float centerY) {
-		this.type = type;
+	public SortTriangle (String sortAttrString, boolean oppo, float centerX, float centerY) {
+		this.oppo = oppo;
+		this.sortAttrString = sortAttrString;
 		xLeft = centerX - sideWidth / 2;
 		yLeft = centerY - sideWidth / 2;
 		xRight = centerX + sideWidth / 2;

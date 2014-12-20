@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -36,8 +37,10 @@ public class FilterJFrame extends JFrame implements ItemListener {
 	
 	JCheckBox[] checkbox;
 	
+	ArrayList<String> selectedAttr = new ArrayList<String>();
 	
 	public FilterJFrame (TimeView timeView) {
+	
 		this.timeView = timeView;
 		this.setTitle("Filter");
 		this.setSize(360, 350);
@@ -112,7 +115,7 @@ public class FilterJFrame extends JFrame implements ItemListener {
 		checkbox[11].addItemListener(this);
 		checkBoxPanel.add(checkbox[11]);
 		
-		checkbox[12] = new JCheckBox("Rebound", true);
+		checkbox[12] = new JCheckBox("Rebound", false);
 		checkbox[12].addItemListener(this);
 		checkBoxPanel.add(checkbox[12]);
 		checkbox[13] = new JCheckBox("Offense RB", false);
@@ -123,20 +126,20 @@ public class FilterJFrame extends JFrame implements ItemListener {
 		checkBoxPanel.add(checkbox[14]);
 		
 		
-		checkbox[15] = new JCheckBox("Points", true);
+		checkbox[15] = new JCheckBox("Points", false);
 		checkbox[15].addItemListener(this);
 		checkBoxPanel.add(checkbox[15]);
 	
-		checkbox[16] = new JCheckBox("Assist", true);
+		checkbox[16] = new JCheckBox("Assist", false);
 		checkbox[16].addItemListener(this);
 		checkBoxPanel.add(checkbox[16]);
 		checkbox[17] = new JCheckBox("Steal", false);
 		checkbox[17].addItemListener(this);
 		checkBoxPanel.add(checkbox[17]);
-		checkbox[18] = new JCheckBox("Block", true);
+		checkbox[18] = new JCheckBox("Block", false);
 		checkbox[18].addItemListener(this);
 		checkBoxPanel.add(checkbox[18]);
-		checkbox[19] = new JCheckBox("Turnover", true);
+		checkbox[19] = new JCheckBox("Turnover", false);
 		checkbox[19].addItemListener(this);
 		checkBoxPanel.add(checkbox[19]);
 		checkbox[20] = new JCheckBox("Personal Foul", false);
@@ -151,6 +154,10 @@ public class FilterJFrame extends JFrame implements ItemListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				timeView.selectedAttr.clear();
+				for (int i = 0;  i < selectedAttr.size(); i++) {
+					timeView.selectedAttr.add(selectedAttr.get(i));
+				}
 				timeView.resetAttrDisplay();
 			}
 			
@@ -162,14 +169,14 @@ public class FilterJFrame extends JFrame implements ItemListener {
 		if (e.getStateChange() == e.SELECTED) {
 			for (int i = 0; i < this.checkboxNum; i++) {
 				if (e.getSource() == checkbox[i]) {
-					timeView.selectedAttr.add(checkbox[i].getText());
+					selectedAttr.add(checkbox[i].getText());
 					break;
 				}
 			}
 		} else if (e.getStateChange() == e.DESELECTED) {
 			for (int i = 0; i < this.checkboxNum; i++) {
 				if (e.getSource() == checkbox[i]) {
-					timeView.selectedAttr.remove(checkbox[i].getText());
+					selectedAttr.remove(checkbox[i].getText());
 					break;
 				}
 			}

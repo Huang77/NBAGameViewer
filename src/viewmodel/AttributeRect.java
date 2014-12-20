@@ -27,6 +27,16 @@ public class AttributeRect {
 	Rectangle2D.Float leftRect = new Rectangle2D.Float();
 	Rectangle2D.Float rightRect = new Rectangle2D.Float();
 	
+	public AttributeRect (Database database, int teamIndex, String type, float[] value) {
+		if (AttributeRect.database == null) {
+			AttributeRect.database = database;
+		}
+		this.teamIndex = teamIndex;
+		this.type = type;
+		this.value = value[0];
+		this.oValue = value[1];
+	}
+	
 	public AttributeRect (Database database, int teamIndex, String type, float value, float oValue) {
 		if (AttributeRect.database == null) {
 			AttributeRect.database = database;
@@ -36,8 +46,13 @@ public class AttributeRect {
 		this.value = value;
 		this.oValue = oValue;
 	}
+	
 	public void setPosition (float x, float y) {
 		middleX = x;
+		middleY = y;
+		setRects();
+	}
+	public void setYPosition (float y) {
 		middleY = y;
 		setRects();
 	}
@@ -55,31 +70,33 @@ public class AttributeRect {
 		
 	}
 	public static float getMapResult (String type, float value) {
-		float maxValue = 0, minValue = 0;
-		if (type.equals("pts")) {
-			maxValue = database.maxpts;
-			minValue = database.minpts;
-		} else if (type.equals("trb")) {
-			maxValue = database.maxtrb;
-			minValue = database.mintrb;
-		} else if (type.equals("ast")) {
-			maxValue = database.maxast;
-			minValue = database.minast;
-		} else if (type.equals("tov")) {
-			maxValue = database.maxtov;
-			minValue = database.mintov;
-		} else if (type.equals("blk")) {
-			maxValue = database.maxblk;
-			minValue = database.minblk;
+		float[] returnValue = database.getMinMaxByType(type);
+/*		if (type.equals("FTP%")) {
+			System.out.println(type + "   " + value);
+			System.out.println(type + " Max: " + returnValue[0] +" Min: " + returnValue[1]);
 		}
-		return PApplet.map(value, minValue, maxValue, minWidth, maxWidth);
+*/
+		return PApplet.map(value, returnValue[1], returnValue[0], minWidth, maxWidth);
 	}
 	
 	public float getLeftX (SeasonCanvas canvas) {
-		return leftRect.x - canvas.textWidth(String.valueOf(df.format(value))) - 4;
+		float temp = 0f;
+		if (type.endsWith("%")) {
+			temp = canvas.textWidth(String.valueOf(value));
+		} else {
+			temp = canvas.textWidth(String.valueOf(df.format(value)));
+		}
+		
+		return leftRect.x - temp - 4;
 	}
 	public float getRightX (SeasonCanvas canvas) {
-		return rightRect.x + rightRect.width + canvas.textWidth(String.valueOf(df.format(oValue))) + 4;
+		float temp = 0f;
+		if (type.endsWith("%")) {
+			temp = canvas.textWidth(String.valueOf(oValue));
+		} else {
+			temp = canvas.textWidth(String.valueOf(df.format(oValue)));
+		}
+		return rightRect.x + rightRect.width + temp + 4;
 	}
 	public float getMiddleY () {
 		return middleY + barHeight / 2;
@@ -106,9 +123,20 @@ public class AttributeRect {
 			canvas.textSize(14);
 		}
 		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
-		canvas.text(df.format(value), leftRect.x, leftRect.y + leftRect.height / 2);
+		
+		if (type.endsWith("%")) {
+			canvas.text(value, leftRect.x, leftRect.y + leftRect.height / 2);
+		} else {
+			canvas.text(df.format(value), leftRect.x, leftRect.y + leftRect.height / 2);
+		}
 		canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
-		canvas.text(df.format(oValue), rightRect.x + rightRect.width , rightRect.y + rightRect.height / 2);
+		
+		if (type.endsWith("%")) {
+			canvas.text(oValue, rightRect.x + rightRect.width , rightRect.y + rightRect.height / 2);
+		} else {
+			canvas.text(df.format(oValue), rightRect.x + rightRect.width , rightRect.y + rightRect.height / 2);
+		}
+		
 		canvas.popStyle();
 	}
 	

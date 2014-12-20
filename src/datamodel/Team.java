@@ -206,4 +206,99 @@ public class Team {
 		return gameIndex;
 	}
 	
+	public float[] getAttrValueByType (String type) {
+		float[] result = new float[2];
+		
+		if (type.equals("Points")) {
+			result[0] = pts;
+			result[1] = oppts;
+		} else if (type.equals("Field Goal")) {
+			result[0] = fg;
+			result[1] = opfg;
+		} else if (type.equals("FGA")) {
+			result[0] = fga;
+			result[1] = opfga;
+		} else if (type.equals("FGP%")) {
+			result[0] = fgp;
+			result[1] = opfgp;
+		} else if (type.equals("2-Points")) {
+			result[0] = _2p;
+			result[1] = op_2p;
+		} else if (type.equals("2PA")) {
+			result[0] = _2pa;
+			result[1] = op_2pa;
+		} else if (type.equals("2PP%")) {
+			result[0] = _2pp;
+			result[1] = op_2pp;
+		} else if (type.equals("3-Points")) {
+			result[0] = _3p;
+			result[1] = op_3p;
+		} else if (type.equals("3PA")) {
+			result[0] = _3pa;
+			result[1] = op_3pa;
+		} else if (type.equals("3PP%")) {
+			result[0] = _3pp;
+			result[1] = op_3pp;
+		} else if (type.equals("Free Throw")) {
+			result[0] = ft;
+			result[1] = opft;
+		} else if (type.equals("FTA")) {
+			result[0] = fta;
+			result[1] = opfta;
+		} else if (type.equals("FTP%")) {
+			result[0] = ftp;
+			result[1] = opftp;
+		} else if (type.equals("Rebound")) {
+			result[0] = trb;
+			result[1] = optrb;
+		} else if (type.equals("Offense RB")) {
+			result[0] = orb;
+			result[1] = oporb;
+		} else if (type.equals("Defense RB")) {
+			result[0] = drb;
+			result[1] = opdrb;
+		} else if (type.equals("Assist")) {
+			result[0] = ast;
+			result[1] = opast;
+		} else if (type.equals("Steal")) {
+			result[0] = stl;
+			result[1] = opstl;
+		} else if (type.equals("Block")) {
+			result[0] = blk;
+			result[1] = opblk;
+		} else if (type.equals("Turnover")) {
+			result[0] = tov;
+			result[1] = optov;
+		} else if (type.equals("Personal Foul")) {
+			result[0] = pf;
+			result[1] = oppf;
+		} 
+		return result;
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
