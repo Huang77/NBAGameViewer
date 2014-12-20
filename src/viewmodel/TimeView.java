@@ -12,6 +12,8 @@ public class TimeView {
 	static int filterDiffScore = 0;
 	static int filterStreakNum = 0;
 	static int hoverTeamIndex = -1;
+	static boolean displayWin = true;
+	static boolean displayLost = true;
 	//static int displayAttrNum = 5;
 	
 	int leftTopX, leftTopY;
@@ -25,13 +27,14 @@ public class TimeView {
 	int[] verticalOrder;  // vertical order of the teams 
 	int teamGap = 28;
 	
-	HashMap<Integer, WinLostLine_V2> teamCircleMap = new HashMap<Integer, WinLostLine_V2>();
+	HashMap<Integer, WinLostLine> teamCircleMap = new HashMap<Integer, WinLostLine>();
 		
 	HashMap<String, HashMap<Integer, AttributeRect>> attrMap = new HashMap<String, HashMap<Integer, AttributeRect>>();
 	ArrayList<SortTriangle[]> triangleList = new ArrayList<SortTriangle[]>();
 	public ArrayList<String> selectedAttr = new ArrayList<String>();
 	
 	SortTriangle winTri, lostTri;
+	WinLostLegend winLostLegend;
 	
 	Handle diffHandle;
 	Handle streakHandle;
@@ -55,7 +58,7 @@ public class TimeView {
 	
 	public void setAllTeamWinLostLine () {
 		for (int teamIndex = 0; teamIndex < Database.teamNum; teamIndex++) {
-			WinLostLine_V2 line = new WinLostLine_V2(teamIndex, database);
+			WinLostLine line = new WinLostLine(teamIndex, database);
 			line.setPosition(leftTopX, leftTopY + this.verticalOrder[teamIndex] * (teamGap));
 			teamCircleMap.put(teamIndex, line);
 		}
@@ -96,7 +99,7 @@ public class TimeView {
 		setAllTeamWinLostLine();
 		setAttrbuteRect();
 		resetAttrDisplay();
-		setWinLostTriangle();
+		setWinLostLegendAndTriangle();
 		setHandles();
 	}
 	
@@ -121,12 +124,14 @@ public class TimeView {
 		}
 	}
 	
-	public void setWinLostTriangle () {
+	public void setWinLostLegendAndTriangle () {
 		int middleX = 80;
 		int middleY = 50;
 		int barWidth = 20;
 		winTri = new SortTriangle("WinRatio", false, middleX - barWidth / 2, middleY - 2);
 		lostTri = new SortTriangle("LostRatio", false, middleX + barWidth / 2, middleY - 2);
+		
+		winLostLegend = new WinLostLegend(middleX, middleY - 25);
 	}
 	
 	public void drawTriangle (SeasonCanvas canvas) {
@@ -181,29 +186,7 @@ public class TimeView {
 	}
 	
 	public void drawWinLostLegend (SeasonCanvas canvas) {
-		int middleX = 80;
-		int middleY = 25;
-		int barWidth = 20, barHeight = 15;
-		canvas.pushStyle();
-	
-		canvas.noStroke();
-		canvas.fill(252,146,114);
-		canvas.rect(middleX - barWidth, middleY, barWidth, barHeight);
-		canvas.fill(173,221,142);
-		canvas.rect(middleX, middleY, barWidth, barHeight);
-		
-		
-		canvas.fill(80);
-		canvas.textSize(15);
-		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
-		canvas.text("Win", middleX - barWidth - 2, middleY + barHeight / 2);
-		canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
-		canvas.text("Lose", middleX  + barWidth  + 2, middleY + barHeight / 2);
-		
-		canvas.stroke(180);
-		canvas.strokeWeight(1);
-		canvas.line(middleX, middleY - 2, middleX, middleY  + barHeight + 2);
-		canvas.popStyle();
+		winLostLegend.draw(canvas);
 	}
 	
 
@@ -308,6 +291,7 @@ public class TimeView {
 		mouseMovedOnAttributeRect(canvas);
 		winTri.mouseHover(canvas);
 		lostTri.mouseHover(canvas);
+		winLostLegend.mouseHover(canvas);
 	}
 	
 	public void mouseMovedOnAttributeRect (SeasonCanvas canvas) {
@@ -326,6 +310,7 @@ public class TimeView {
 	
 	public void mouseClicked (SeasonCanvas canvas) {
 		triangleClicked(canvas);
+		winLostLegend.mouseClicked(canvas);
 	}
 	
 	public void triangleClicked (SeasonCanvas canvas) {

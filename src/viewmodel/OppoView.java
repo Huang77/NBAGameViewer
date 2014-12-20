@@ -60,8 +60,8 @@ public class OppoView {
 	
 	
 	public void setupWinLostCell () {
-		cellSize = (int) (height * 0.88 / database.teamNum - cellGap);
-		this.winLostCellList = new WinLostCell[database.teamNum][database.teamNum];
+		cellSize = (int) (height * 0.88 / Database.teamNum - cellGap);
+		this.winLostCellList = new WinLostCell[Database.teamNum][Database.teamNum];
 		int tempX = leftTopX, tempY = leftTopY;
 		
 		int lineIndex, oppoIndex;
@@ -109,7 +109,7 @@ public class OppoView {
 	
 	public void resetWinLostCellPosition () {
 		for (int i = 0; i < teamSortIndex.length; i++) {
-			for (int j = 0; j < database.teamNum; j++) {
+			for (int j = 0; j < Database.teamNum; j++) {
 				winLostCellList[teamSortIndex[i]][j].setNewPosition(leftTopX + j * (cellSize + cellGap), leftTopY + i * (cellSize + cellGap));
 			}
 		}
@@ -121,12 +121,12 @@ public class OppoView {
 	}
 	
 	public void setupLeftTeamBar () {
-		leftTeamBarList = new LeftTeamBar[database.teamNum];
+		leftTeamBarList = new LeftTeamBar[Database.teamNum];
 		int frontWidth;
 		Team tempTeam;
 		int[] tempWinLost;
-		for (int i = 0; i < database.teamNum; i++) {
-			tempTeam = database.teams[i];
+		for (int i = 0; i < Database.teamNum; i++) {
+			tempTeam = Database.teams[i];
 			tempWinLost = tempTeam.getOverall();
 			leftTeamBarList[i] = new LeftTeamBar(tempTeam.index);
 			leftTeamBarList[i].setBackgroundRectSize(teamBarLeftTopX, teamBarLeftTopY + i * (cellSize + cellGap), leftTeamBarWidth, cellSize);
@@ -137,18 +137,18 @@ public class OppoView {
 	
 	public void setTeamOrder (TeamSortType sortType) {
 		if (teamSortIndex == null) {
-			teamSortIndex = new int[database.teamNum];
+			teamSortIndex = new int[Database.teamNum];
 		}	
 		switch (sortType) {
 			case Overall:
-				Arrays.sort(database.teams, new TeamSortByOverall());
-				for (int i = 0; i < database.teamNum; i++) {
-					teamSortIndex[i] = database.teams[i].index;
+				Arrays.sort(Database.teams, new TeamSortByOverall());
+				for (int i = 0; i < Database.teamNum; i++) {
+					teamSortIndex[i] = Database.teams[i].index;
 				}
 				break;
 			case Name:
 			default: 
-				for (int i = 0; i < database.teamNum; i++) {
+				for (int i = 0; i < Database.teamNum; i++) {
 					teamSortIndex[i] = i;
 				}
 		}
@@ -162,8 +162,8 @@ public class OppoView {
 	
 	
     public void drawAllWinLostCells (SeasonCanvas canvas) {
-    	for (int i = 0; i < database.teamNum; i++) {
-    		for (int j = 0; j < database.teamNum; j++) {
+    	for (int i = 0; i < Database.teamNum; i++) {
+    		for (int j = 0; j < Database.teamNum; j++) {
     			winLostCellList[i][j].draw(canvas);
     		}
     	}
@@ -181,7 +181,7 @@ public class OppoView {
     	//this.rotate(-PApplet.QUARTER_PI);
     	canvas.pushStyle();
     	canvas.textAlign(PApplet.LEFT);
-    	for (int i = 0; i < database.teamNum; i++) {
+    	for (int i = 0; i < Database.teamNum; i++) {
     		canvas.fill(0);
         	if (i == topHoverTextIndex) {
         		canvas.fill(250,0,0);

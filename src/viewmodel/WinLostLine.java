@@ -21,7 +21,7 @@ import processing.core.PApplet;
 import datamodel.Database;
 import datamodel.Team;
 
-public class WinLostLine_V2 {
+public class WinLostLine {
 	static final int[] colorWin = {252,146,114};
 	static final int[] colorLost = {173,221,142};
 	static final int[] colorOff = {220,220,220};
@@ -44,7 +44,7 @@ public class WinLostLine_V2 {
 	int startX, startY;
 	int endX, endY;
 	
-	public WinLostLine_V2 (int teamIndex, Database database) {
+	public WinLostLine (int teamIndex, Database database) {
 		this.teamIndex = teamIndex;
 		this.database = database;
 		this.leftTeamBar = new LeftTeamBar(teamIndex);
@@ -182,18 +182,31 @@ public class WinLostLine_V2 {
 		public WinLostStreak (boolean win) {
 			this.win = win;
 		}
+		
 		public void setNumPosY (int y) {
 			numPosY = y;
 		}
+		
 		public void addGameBar (DiffBar bar) {
 			if (bars.size() > 1) {
 				numPosX = (int) ((bar.rect.x + bars.get(0).rect.x) / 2);
 			}
 			this.bars.add(bar);
 		}
+		
 		public int getGameNum () {
 			return bars.size();
 		}
+		
+		public boolean isAllGray () {
+			for (int i = 0; i < bars.size(); i++) {
+				if (bars.get(i).gray == false) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
 		public void draw (SeasonCanvas canvas) {
 			hover = false;
 			canvas.pushStyle();
@@ -204,7 +217,7 @@ public class WinLostLine_V2 {
 				}
 				if (i >= 1) {
 					canvas.stroke(50);
-					if (TimeView.filterStreakNum > getGameNum()) {
+					if (TimeView.filterStreakNum > getGameNum() || isAllGray()) {
 						canvas.stroke(180);
 					}
 					if (win == true) {
@@ -220,7 +233,7 @@ public class WinLostLine_V2 {
 				canvas.textAlign(PApplet.CENTER, PApplet.CENTER);
 				canvas.textSize(10);
 				canvas.fill(0);
-				if (TimeView.filterStreakNum > getGameNum()) {
+				if (TimeView.filterStreakNum > getGameNum() || isAllGray()) {
 					canvas.fill(180);
 				}
 				if (win) {
@@ -298,11 +311,18 @@ public class WinLostLine_V2 {
 				}
 			}
 			canvas.fill(color[0], color[1], color[2]);
-			if (scoreDiff < TimeView.filterDiffScore || parent.getGameNum() < TimeView.filterStreakNum) {
+
+			
+			if ((win == true && TimeView.displayWin == false) || (win == false && TimeView.displayLost == false)) {
 				gray = true;
 			} else {
-				gray = false;
+				if (scoreDiff < TimeView.filterDiffScore || parent.getGameNum() < TimeView.filterStreakNum) {
+					gray = true;
+				} else {
+					gray = false;
+				}
 			}
+			
 			if (gray == true) {
 				canvas.fill(color[0], color[1], color[2], 50);
 			}
