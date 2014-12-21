@@ -1,6 +1,7 @@
 package datamodel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 
@@ -18,6 +19,10 @@ public class GameStatData {
 	ArrayList<Event> eventList = new ArrayList<Event>();
 	ArrayList<PlayerGameStat> leftPlayers = new ArrayList<PlayerGameStat>();
 	ArrayList<PlayerGameStat> rightPlayers = new ArrayList<PlayerGameStat>();
+	
+	HashMap<String, PlayerGameStat> leftPlayersMap = new HashMap<String, PlayerGameStat>();
+	HashMap<String, PlayerGameStat> rightPlayersMap = new HashMap<String, PlayerGameStat>();
+	
 		
 	public boolean isLeftWin () {
 		return leftScore > rightScore ? true : false;

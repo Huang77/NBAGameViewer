@@ -94,9 +94,11 @@ public class LeftTeamBar {
 		//canvas.stroke(180, 180, 180);
 	    //canvas.strokeWeight(strokeW);
 		canvas.noStroke();
+		canvas.textSize(13);
 		if (teamIndex == TimeView.hoverTeamIndex) {
-			canvas.stroke(255,0,0);
+			canvas.stroke(100);
 			canvas.strokeWeight(1.5f);
+			canvas.textSize(15);
 		}
 		
 		canvas.fill(colorBackground[0], colorBackground[1], colorBackground[2], 220);

@@ -16,6 +16,9 @@ public class SingleGameView {
 	
 	int x, y, width, height;
 	
+	int gameWidth;
+	float gameWidthRatio = 0.85f;
+	
 	int diffGraphHeight = 150;
 	int playerBarHeight = 12, playerBarGap = 5;
 	
@@ -37,6 +40,7 @@ public class SingleGameView {
 		this.x = startX;
 		this.y = startY;
 		this.width = width;
+		this.gameWidth = (int) (width * gameWidthRatio);
 		this.height = height;
 	}
 	
@@ -51,7 +55,7 @@ public class SingleGameView {
 		
 		// set diff graph
 		this.diffGraph = new DiffHorizonGraph(gameIndex, database, maxQuarter);
-		this.diffGraph.setup(startX, startY, width, diffGraphHeight);
+		this.diffGraph.setup(startX, startY, gameWidth, diffGraphHeight);
 				
 		
 		Event event;
@@ -66,7 +70,7 @@ public class SingleGameView {
 				if (event instanceof MadeScoreEvent) {
 					MadeScoreEvent e = (MadeScoreEvent) event;
 					circle = new ShootCircle(e.getPoint(), true);
-					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + width);
+					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + gameWidth);
 					circle.setPosition(rx, leftCircleY);
 					if (leftTeamLastLine == null) {
 						leftTeamLastLine = new ScoreEventCircleLine(rx, leftCircleY, true);
@@ -83,7 +87,7 @@ public class SingleGameView {
 				} else if (event instanceof MissScoreEvent) {
 					MissScoreEvent e = (MissScoreEvent) event;
 					circle = new ShootCircle(e.getPoint(), false);
-					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + width);
+					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + gameWidth);
 					circle.setPosition(rx, leftCircleY);
 					if (leftTeamLastLine == null) {
 						leftTeamLastLine = new ScoreEventCircleLine(rx, leftCircleY, false);
@@ -102,7 +106,7 @@ public class SingleGameView {
 				if (event instanceof MadeScoreEvent) {
 					MadeScoreEvent e = (MadeScoreEvent) event;
 					circle = new ShootCircle(e.getPoint(), true);
-					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + width);
+					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + gameWidth);
 					circle.setPosition(rx, rightCircleY);
 					if (rightTeamLastLine == null) {
 						rightTeamLastLine = new ScoreEventCircleLine(rx, rightCircleY, true);
@@ -119,7 +123,7 @@ public class SingleGameView {
 				} else if (event instanceof MissScoreEvent) {
 					MissScoreEvent e = (MissScoreEvent) event;
 					circle = new ShootCircle(e.getPoint(), false);
-					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + width);
+					rx = SeasonCanvas.translateTimeIndexToXPos(e.getTimeIndex(), maxQuarter, startX, startX + gameWidth);
 					circle.setPosition(rx, rightCircleY);
 					if (rightTeamLastLine == null) {
 						rightTeamLastLine = new ScoreEventCircleLine(rx, rightCircleY, false);
@@ -141,14 +145,14 @@ public class SingleGameView {
 		int x = startX, y = leftCircleY - 50;
 		ArrayList<PlayerGameStat> leftPlayers = database.gameStatDataList.get(gameIndex).getLeftPlayers();
 		for (int i = 0; i < leftPlayers.size(); i++) {
-			PlayerBar curBar = new PlayerBar(leftPlayers.get(i), startX, y - i * (playerBarHeight + playerBarGap), width, playerBarHeight);
+			PlayerBar curBar = new PlayerBar(leftPlayers.get(i), startX, y - i * (playerBarHeight + playerBarGap), gameWidth, playerBarHeight);
 			curBar.setInsideBar();
 			leftPlayerBar.add(curBar);
 		}
 		y = rightCircleY + 50;
 		ArrayList<PlayerGameStat> rightPlayers = database.gameStatDataList.get(gameIndex).getRightPlayers();
 		for (int i = 0; i < rightPlayers.size(); i++) {
-			PlayerBar curBar = new PlayerBar(rightPlayers.get(i), startX, y + i * (playerBarHeight + playerBarGap), width, playerBarHeight);
+			PlayerBar curBar = new PlayerBar(rightPlayers.get(i), startX, y + i * (playerBarHeight + playerBarGap), gameWidth, playerBarHeight);
 			curBar.setInsideBar();
 			leftPlayerBar.add(curBar);
 		}
@@ -171,5 +175,9 @@ public class SingleGameView {
 		for (int i = 0; i < rightPlayerBar.size(); i++) {
 			rightPlayerBar.get(i).draw(canvas);
 		}
+	}
+	
+	public void mouseMoved (SingleGameCanvas canvas) {
+		
 	}
 }

@@ -11,7 +11,7 @@ public class SingleGameCanvas extends PApplet {
 	int textSize = 12;
 	PFont font = createFont("Sans Serif", textSize);
 	
-	int leftTopX = 150, leftTopY = 10;
+	int leftTopX = 170, leftTopY = 10;
 	
 	Database database;
 	// test diff score horizon graph
@@ -23,8 +23,9 @@ public class SingleGameCanvas extends PApplet {
 		singleGame.setup();
 	}
 	
-	public SingleGameCanvas() {
-		
+	public SingleGameCanvas(int width, int height) {
+		this.width = width;
+		this.height = height;
 	}
 	
 	public SingleGameCanvas (int gameIndex, Database database, int width, int height) {
@@ -39,7 +40,7 @@ public class SingleGameCanvas extends PApplet {
     public void setup () {
     	size(this.width, this.height);
     	textFont(font);
-		setSingleGameView(gameIndex, leftTopX, leftTopY, 1100, height);
+		setSingleGameView(gameIndex, leftTopX, leftTopY, (int)(width * 0.86), height);
     }
 	
     @Override
@@ -47,6 +48,11 @@ public class SingleGameCanvas extends PApplet {
     	background(240);
     	smooth();
     	singleGame.draw(this);
+    }
+    
+    @Override
+    public void mouseMoved () {
+    	singleGame.mouseMoved(this);
     }
     
 }

@@ -9,7 +9,7 @@ public class ShootCircle {
 	Ellipse2D.Float circle = new Ellipse2D.Float();
 	int point;
 	boolean made;
-	static final int[] radius = {6, 10, 14};
+	static final int[] radius = {6, 8, 12};
 	static final int[] color = {49,163,84, 222,45,38};
 	
 	boolean selected = false;

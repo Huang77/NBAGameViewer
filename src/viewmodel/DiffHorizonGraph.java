@@ -1,13 +1,16 @@
 package viewmodel;
 
 import java.awt.Rectangle;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Float;
 import java.util.ArrayList;
 
 import datamodel.Database;
 import datamodel.Event;
+import datamodel.GameStatData;
 import datamodel.MadeScoreEvent;
+import datamodel.TimeoutEvent;
 import processing.core.PApplet;
 
 public class DiffHorizonGraph {
@@ -25,7 +28,7 @@ public class DiffHorizonGraph {
 	Rectangle2D.Float backgroundRect = new Rectangle2D.Float();
 	
 	ArrayList<InsideRect> insideRectList = new ArrayList<InsideRect>();
-	
+	ArrayList<TimeoutCircle> timeoutCircleList = new ArrayList<TimeoutCircle>();
 	
 	public DiffHorizonGraph (int gameIndex, Database database, int maxQuarter) {
 		this.gameIndex = gameIndex;
@@ -43,24 +46,43 @@ public class DiffHorizonGraph {
 	}
 	public void setup (int x, int y, int width, int height) {
 		setBackgroundRect(x, y, width, height);
-		ArrayList<Event> eventList = database.gameStatDataList.get(gameIndex).getEventList();
+		GameStatData game = database.gameStatDataList.get(gameIndex);
+		ArrayList<Event> eventList = game.getEventList();
+		
+		
 		int i = 0;
 		int startX = 0, endX;
 		int scoreDiff = 0;
 		int numOfEvent = eventList.size();
+		
+		float timeoutCircleX, timeoutCircleY = backgroundRect.y + backgroundRect.height / 2;
+		boolean timeoutLeft;
+		
+		Event tempEvent;
+		
 		for (; i < numOfEvent - 1; i++) {
-			if (eventList.get(i) instanceof MadeScoreEvent) {
-				endX = SeasonCanvas.translateTimeIndexToXPos(eventList.get(i).getTimeIndex(), this.maxQuarter, x, x + width);
-				addInsideRectList_LineMode(scoreDiff, startX, endX - startX);
+			tempEvent = eventList.get(i); 
+			
+			// set score diff rect
+			if (tempEvent instanceof MadeScoreEvent) {
+				endX = SeasonCanvas.translateTimeIndexToXPos(tempEvent.getTimeIndex(), this.maxQuarter, x, x + width);
+				addInsideRectList_LineMode(scoreDiff, startX, endX - startX, tempEvent.curLeftScore, tempEvent.curRightScore);
 				startX = endX;
-				scoreDiff = eventList.get(i).getScoreDiff();
+				scoreDiff = tempEvent.getScoreDiff();
+			} 
+			// set timeout circle 
+			else if (tempEvent instanceof TimeoutEvent) {
+				timeoutCircleX = SeasonCanvas.translateTimeIndexToXPos(tempEvent.getTimeIndex(), this.maxQuarter, x, x + width);
+				timeoutLeft = tempEvent.getActionTeamIndex() == game.leftTeamIndex ? true : false;
+				TimeoutCircle timeoutCircle = new TimeoutCircle(timeoutCircleX, timeoutCircleY, timeoutLeft);
+				timeoutCircleList.add(timeoutCircle);
 			}
 		}
 		endX = x + width;
-		addInsideRectList_LineMode(scoreDiff, startX, endX - startX);
+		addInsideRectList_LineMode(scoreDiff, startX, endX - startX, eventList.get(i).curLeftScore, eventList.get(i).curRightScore);
 	}
 	
-	public void addInsideRectList_HorizonMode (int scoreDiff, int x, int width) {
+/*	public void addInsideRectList_HorizonMode (int scoreDiff, int x, int width) {
 		lineMode = false;
 		boolean scorePositive = scoreDiff >= 0 ? true : false;
 		scoreDiff = scorePositive ? scoreDiff : -scoreDiff;
@@ -81,8 +103,9 @@ public class DiffHorizonGraph {
 		insideRectList.add(upRect);
 		insideRectList.add(downRect);
 	}
+	*/
 	
-	public void addInsideRectList_LineMode (int scoreDiff, int x, int width) {
+	public void addInsideRectList_LineMode (int scoreDiff, int x, int width, int leftScore, int rightScore) {
 		lineMode = true;
 		int baseLineY = (int) (backgroundRect.y + backgroundRect.height / 2);
 		float barHeight = backgroundRect.height / 2;
@@ -93,9 +116,9 @@ public class DiffHorizonGraph {
 		float rectHeight = PApplet.map(scoreDiff, 0, database.gameMap.get(gameIndex).getMaxScoreDiff() + 3, 0, barHeight);
 		InsideRect rect = null;
 		if (scorePositive) {
-			rect = new InsideRect(x, baseLineY - rectHeight, x + width, baseLineY);
+			rect = new InsideRect(x, baseLineY - rectHeight, x + width, baseLineY, leftScore, rightScore);
 		} else {
-			rect = new InsideRect(x, baseLineY, x + width, baseLineY + rectHeight);
+			rect = new InsideRect(x, baseLineY, x + width, baseLineY + rectHeight, leftScore, rightScore);
 		}
 		
 	
@@ -114,22 +137,6 @@ public class DiffHorizonGraph {
 		for (int i = 0; i < insideRectList.size(); i++) {
 			insideRectList.get(i).draw(canvas);
 		}
-		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
-		canvas.fill(80);
-		canvas.textSize(20);
-		// draw team name
-		canvas.text(leftTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 - 40);
-		canvas.text(rightTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 + 30);
-		// draw max score diff
-		canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
-		canvas.textSize(14);
-		canvas.text(database.gameMap.get(gameIndex).maxLeftDiff, backgroundRect.x + 5, backgroundRect.y + 10);
-		canvas.text(database.gameMap.get(gameIndex).maxRightDiff, backgroundRect.x + 5, backgroundRect.y + backgroundRect.height - 10);
-		// draw final score
-		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
-		canvas.text(database.gameMap.get(gameIndex).leftScore, backgroundRect.x + backgroundRect.width - 5, backgroundRect.y + 10);
-		canvas.text(database.gameMap.get(gameIndex).rightScore, backgroundRect.x + backgroundRect.width - 5, backgroundRect.y + backgroundRect.height - 10);
-		
 
 		canvas.pushStyle();
 		canvas.strokeWeight(1.5f);
@@ -160,6 +167,23 @@ public class DiffHorizonGraph {
 			canvas.line(insideRectList.get(i).rect.x, y, insideRectList.get(i).rect.x + insideRectList.get(i).rect.width, y);
 			lastY = y;
 		}
+		
+		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+		canvas.fill(80);
+		canvas.textSize(20);
+		// draw team name
+		canvas.text(leftTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 - 40);
+		canvas.text(rightTeamName, backgroundRect.x - 10, backgroundRect.y + backgroundRect.height / 2 + 30);
+		// draw max score diff
+		canvas.textAlign(PApplet.LEFT, PApplet.CENTER);
+		canvas.textSize(14);
+		canvas.text(database.gameMap.get(gameIndex).maxLeftDiff, backgroundRect.x + 5, backgroundRect.y + 10);
+		canvas.text(database.gameMap.get(gameIndex).maxRightDiff, backgroundRect.x + 5, backgroundRect.y + backgroundRect.height - 10);
+		// draw final score
+		canvas.textAlign(PApplet.RIGHT, PApplet.CENTER);
+		canvas.text(database.gameMap.get(gameIndex).leftScore, backgroundRect.x + backgroundRect.width - 5, backgroundRect.y + 10);
+		canvas.text(database.gameMap.get(gameIndex).rightScore, backgroundRect.x + backgroundRect.width - 5, backgroundRect.y + backgroundRect.height - 10);
+		
 		canvas.popStyle();
 		
 		
@@ -171,8 +195,15 @@ public class DiffHorizonGraph {
 		if (lineMode) {
 			canvas.line(backgroundRect.x, backgroundRect.y + backgroundRect.height / 2, backgroundRect.x + backgroundRect.width, backgroundRect.y + backgroundRect.height / 2);
 		}
+		
+		// draw timeout circle
+		for (int i = 0; i < timeoutCircleList.size(); i++) {
+			timeoutCircleList.get(i).draw(canvas);
+		}
+		
+		
 		int tempX;
-		canvas.strokeWeight(3);
+		canvas.strokeWeight(1);
 		canvas.stroke(240);
 		for (int i = 1; i <= maxQuarter; i++) {
 			if (i <= 4) {
@@ -187,16 +218,23 @@ public class DiffHorizonGraph {
 		canvas.popStyle();
 	}
 	
+	public void mouseMoved (SingleGameCanvas canvas) {
+		
+	}
+	
 	public class InsideRect {
 		Rectangle2D.Float rect = new Rectangle.Float();
 		int[] color = new int[3];
 		int scoreDiff;
+		int leftScore, rightScore;
 		
-		public InsideRect (float x1, float y1, float x2, float y2) {
+		public InsideRect (float x1, float y1, float x2, float y2, int leftScore, int rightScore) {
 			rect.x = x1;
 			rect.y = y1;
 			rect.width = x2 - x1;
 			rect.height = y2 - y1;
+			this.leftScore = leftScore;
+			this.rightScore = rightScore;
 		}
 		
 		public void setColor (int[] color) {
@@ -214,15 +252,142 @@ public class DiffHorizonGraph {
 		}
 		
 		public void draw (SingleGameCanvas canvas) {
-
+			// draw rect
 			canvas.pushStyle();
-
-			
 			canvas.fill(this.color[0], this.color[1], this.color[2]);
 			canvas.noStroke();
 			canvas.rect(rect.x, rect.y, rect.width, rect.height);
 			canvas.popStyle();
+			
+			// when hover
+			canvas.pushStyle();
+			if (isMouseHover(canvas)) {
+				canvas.stroke(100);
+				canvas.strokeWeight(1);
+				drawDottedLineY(canvas, canvas.mouseX, rect.y, rect.y + rect.height);
+				canvas.textSize(13);
+				
+				canvas.fill(0);
+				
+				if (scoreDiff >= 0) {
+					canvas.textAlign(PApplet.CENTER, PApplet.BOTTOM);
+					canvas.text(scoreDiff, canvas.mouseX, rect.y - 5);
+					
+					//canvas.text(leftScore, canvas.mouseX, rect.y + rect.height - 2);
+					//canvas.textAlign(PApplet.CENTER, PApplet.TOP);
+					//canvas.text(rightScore, canvas.mouseX, rect.y + rect.height + 2);
+				} else {
+					//canvas.textAlign(PApplet.CENTER, PApplet.BOTTOM);
+					//canvas.text(leftScore, canvas.mouseX, rect.y + 2);
+					canvas.textAlign(PApplet.CENTER, PApplet.TOP);
+					//canvas.text(rightScore, canvas.mouseX, rect.y + 2);
+					
+					canvas.text(-scoreDiff, canvas.mouseX, rect.y + rect.height + 5);
+				}				
+			}
+			canvas.popStyle();
+		}
+		
+		public boolean isMouseHover (SingleGameCanvas canvas) {
+			if (rect.contains(canvas.mouseX, canvas.mouseY)) {
+				return true;
+			}
+			return false;
+		}	
+	}
+	
+	public class TimeoutCircle {
+		static final int radius = 5;
+		final int[] circleColor = {215,48,39, 166,217,106};
+		
+		Ellipse2D.Float circle = new Ellipse2D.Float();
+		
+		boolean leftTeam = true;
+		
+		public TimeoutCircle (float x, float y, boolean isLeftTeam) {
+			circle.x = x;
+			circle.y = y;
+			circle.width = 2 * radius;
+			circle.height = 2 * radius;
+			leftTeam = isLeftTeam;
+		}
+		
+		public void draw (SingleGameCanvas canvas) {
+			canvas.pushStyle();
+			drawArrow (canvas, leftTeam);
+			
+			
+			
+			if (isMouseHover(canvas)) {
+				canvas.stroke(0);
+				canvas.strokeWeight(1);
+			}
+			
+			if (leftTeam == true) {
+				canvas.fill(circleColor[0], circleColor[1], circleColor[2]);
+			} else {
+				canvas.fill(circleColor[3], circleColor[4], circleColor[5]);
+			}
+			canvas.ellipse(circle.x, circle.y, radius * 2, radius * 2);
+			
+			
+			// draw hover text
+			if (isMouseHover(canvas)) {
+				canvas.textAlign(PApplet.CENTER, PApplet.CENTER);
+				canvas.textSize(13);
+				canvas.fill(0);
+				if (leftTeam) {
+					canvas.noStroke();
+					canvas.fill(220,220,220,150);
+					float w = canvas.textWidth(leftTeamName +  " Timeout");
+					canvas.rect(circle.x - w / 2 - 2, circle.y + radius + 5, w + 2, 15);
+					canvas.fill(0);
+					canvas.text(leftTeamName +  " Timeout", circle.x, circle.y + radius + 10);
+				} else {
+					canvas.noStroke();
+					canvas.fill(220,220,220,150);
+					float w = canvas.textWidth(rightTeamName + " Timeout");
+					canvas.rect(circle.x - w / 2 - 2, circle.y - radius - 15, w + 2, 15);
+					canvas.fill(0);
+					canvas.text(rightTeamName + " Timeout", circle.x, circle.y - radius - 10);
+				}
+			}
+			canvas.popStyle();
+		}
+		
+		public void drawArrow (SingleGameCanvas canvas, boolean up) {
+			int barW = 6, barH = 8;
+			
+			canvas.pushStyle();
+			canvas.fill(120);
+			canvas.noStroke();
+			if (up) {
+				canvas.rect(circle.x - barW / 2, circle.y - barH, barW, barH);
+				canvas.triangle(circle.x, circle.y - barH - circle.height + 3, circle.x - circle.width / 2, circle.y - barH, circle.x + circle.width / 2, circle.y - barH);
+			} else {
+				canvas.rect(circle.x - barW / 2, circle.y, barW, barH);
+				canvas.triangle(circle.x, circle.y + barH + circle.height - 3, circle.x - circle.width / 2, circle.y + barH,  circle.x + circle.width / 2, circle.y + barH);
+			}
+			canvas.popStyle();
+		}
+		
+		public boolean isMouseHover (SingleGameCanvas canvas) {
+			if (PApplet.dist(canvas.mouseX, canvas.mouseY, circle.x, circle.y) <= radius) {
+				return true;
+			}
+			return false;
 		}
 		
 	}
+	
+	
+    void drawDottedLineY(SingleGameCanvas canvas, float x, float yUp, float yDown) {
+    	canvas.smooth();
+        while (yUp < yDown) {
+        	canvas.line(x, yUp, x, yUp + 3);
+            yUp = yUp + 6;  // interval = 3
+        }
+    }
+    
+    
 }

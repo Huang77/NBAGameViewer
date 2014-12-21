@@ -8,7 +8,7 @@ public class Event {
 	
 	int actionTeamIndex;
 	String actionPlayer;
-	int curLeftScore, curRightScore;
+	public int curLeftScore, curRightScore;
 	
 	public Event (String type, String actionPlayer, int quarter, int timeIndex, int actionTeamIndex, int curLeftScore, int curRightScore) {
 		this.quarter = quarter;

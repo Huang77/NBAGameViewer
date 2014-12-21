@@ -15,10 +15,12 @@ import java.util.ArrayList;
 
 
 
+
 import javax.swing.JFrame;
 
 import processing.core.PApplet;
 import datamodel.Database;
+import datamodel.GameStatData;
 import datamodel.Team;
 
 public class WinLostLine {
@@ -263,6 +265,7 @@ public class WinLostLine {
 		WinLostStreak parent;
 		boolean gray = false;
 		
+		GameInfoTag gameInfoTag;
 		
 		public DiffBar (int x, int y, int width, int height, int gameIndex, Database database) {
 			rect.x = x;
@@ -272,7 +275,6 @@ public class WinLostLine {
 			this.gameIndex = gameIndex;
 			this.database = database;
 			this.scoreDiff = database.gameMap.get(gameIndex).getScoreDiff();
-			
 		}
 		
 		public void setParent (WinLostStreak parent) {
@@ -298,18 +300,21 @@ public class WinLostLine {
 			this.away = away;
 		}
 		public void draw (SeasonCanvas canvas) {
+			//TimeView.hoverGameIndex = -1;
 			canvas.pushStyle();
 			canvas.noStroke();
+			TimeView.hoverOnGame |= isMouseHover(canvas);
 			if (isMouseHover(canvas)) {
 				canvas.stroke(0);
 				canvas.strokeWeight(2);
+				TimeView.hoverGameIndex = gameIndex;
 				if (canvas.mousePressed == true) {
 					if (singleGameFrame == null) {
 						singleGameFrame = new SingleGameJFrame(gameIndex, database);
 						System.out.println(gameIndex);
 					}
 				}
-			}
+			} 
 			canvas.fill(color[0], color[1], color[2]);
 
 			
@@ -340,5 +345,6 @@ public class WinLostLine {
 				return false;
 			}
 		}
+		
 	}
 }

@@ -17,6 +17,8 @@ public class PlayerBar {
 	PlayerGameStat pgs;
 	Rectangle2D.Float background = new Rectangle2D.Float();
 	ArrayList<InsideBar> rectList = new ArrayList<InsideBar>();
+	ArrayList<InsideEventCircle> circleList = new ArrayList<InsideEventCircle>();
+	
 	boolean hover = false;
 	
 	public PlayerBar (PlayerGameStat pgs, int x, int y, int width, int height) {
@@ -53,6 +55,11 @@ public class PlayerBar {
 			lastX += width;
 		}
 	}
+	
+	public void setEventCircle () {
+		
+	}
+	
 	public void draw (SingleGameCanvas canvas) {
 		hover = false;
 		for (int i = 0; i < rectList.size(); i++) {
@@ -85,6 +92,7 @@ public class PlayerBar {
 			rect.y = y;
 			rect.width = width;
 			rect.height = height;
+			this.value = value;
 		}
 		public void draw (SingleGameCanvas canvas) {
 			canvas.pushStyle();
@@ -109,12 +117,43 @@ public class PlayerBar {
 		}
 	}
 	
-/*	public class InsideCircle {
+	public class InsideEventCircle {
+		static final int radius = 5;
 		int[] color = new int[3];
 		Ellipse2D.Float circle = new Ellipse2D.Float();
-		String type;
+		String type; // one letter to indicate the event typem
 		
-		public InsideCircle (int type, float x)
+		public InsideEventCircle (String type, float x) {
+			this.type = type;
+			circle.x = x;
+			circle.y = background.x + background.height / 2;
+			circle.width = 2 * radius;
+			circle.height = 2 * radius;
+		}
+		
+		public void setColor (int[] color) {
+			this.color = color;
+		}
+		
+		public void setColor (int r, int g, int b) {
+			color[0] = r;
+			color[1] = g;
+			color[2] = b;
+		}
+		
+		public void draw (SingleGameCanvas canvas) {
+			canvas.pushStyle();
+			canvas.fill(color[0], color[1], color[2]);
+			canvas.ellipse(circle.x, circle.y, circle.width, circle.height);
+			canvas.popStyle();
+		}
+		
+		public boolean isMouseHover (SingleGameCanvas canvas) {
+			if (PApplet.dist(circle.x, circle.y, canvas.mouseX, canvas.mouseY) <= radius) {
+				return true;
+			}
+			return false;
+		}
 	}
-	*/
+	
 }

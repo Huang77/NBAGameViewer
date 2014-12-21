@@ -60,7 +60,18 @@ public class Database {
 		setGameIndexofCellData();
 		readGameEvent(allGameDataFile);
 		readPlayerEfficiency(efficiencyFile);
+		setPlayerEvents();
 		System.out.println("Database read data finished!");
+	}
+	
+	public void setPlayerEvents () {
+		GameStatData curGame;
+		ArrayList<Event> eventList;
+		for (int i = 0; i < gameStatDataList.size(); i++) {
+			curGame = gameStatDataList.get(i);
+			eventList = curGame.getEventList();
+			
+		}
 	}
 	
 	public float[] getMinMaxByType (String type) {
@@ -992,6 +1003,7 @@ public class Database {
 				tempPlayer.addEfficiency(1.0f * tempWidth / sum, tempValue);
 			}
 			game.leftPlayers.add(tempPlayer);
+			game.leftPlayersMap.put(tempPlayer.name, tempPlayer);
 			
 			while ((line = br.readLine()) != null) {
 				array = line.split(",");
@@ -1011,8 +1023,10 @@ public class Database {
 				}
 				if (array[0].equals(leftTeamName)) {
 					game.leftPlayers.add(tempPlayer);
+					game.leftPlayersMap.put(tempPlayer.name, tempPlayer);
 				} else {
 					game.rightPlayers.add(tempPlayer);
+					game.rightPlayersMap.put(tempPlayer.name, tempPlayer);
 				}
 			}
 			

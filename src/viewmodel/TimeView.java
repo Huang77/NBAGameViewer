@@ -9,9 +9,12 @@ import teamsort.TeamSortType;
 import datamodel.*;
 
 public class TimeView {
+	
 	static int filterDiffScore = 0;
 	static int filterStreakNum = 0;
 	static int hoverTeamIndex = -1;
+	static int hoverGameIndex = -1;
+	static boolean hoverOnGame = false;
 	static boolean displayWin = true;
 	static boolean displayLost = true;
 	//static int displayAttrNum = 5;
@@ -38,6 +41,8 @@ public class TimeView {
 	
 	Handle diffHandle;
 	Handle streakHandle;
+	
+	GameInfoTag gameInfoTag = new GameInfoTag();
 	
 	public TimeView (Database database) {
 		this.database = database;
@@ -215,6 +220,7 @@ public class TimeView {
 	}*/
 	
 	public void draw (SeasonCanvas canvas) {
+		hoverOnGame = false;
 		canvas.smooth();
 		diffHandle.update(canvas);
 		diffHandle.display(canvas);
@@ -278,6 +284,12 @@ public class TimeView {
 		drawAttrLegend(canvas);
 		drawTriangle(canvas);
 		drawWinLostLegend(canvas);
+		
+		if (hoverOnGame) {
+			gameInfoTag.setInfo(database, TimeView.hoverGameIndex);
+			gameInfoTag.draw(canvas);
+		}
+
 		canvas.popStyle();
 	}
 	
